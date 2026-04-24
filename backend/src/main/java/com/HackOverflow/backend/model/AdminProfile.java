@@ -1,35 +1,53 @@
 package com.HackOverflow.backend.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
-public class Admin extends Users {
+public class AdminProfile {
+
+    @Id
+    private Long id;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private Users user;
 
     private String organization;
     private String location;
     private String intention;
 
-    public Admin() {
-    }
+    public AdminProfile() {}
 
-    public Admin(String organization, String location, String intention) {
+    public AdminProfile(Long id, Users user, String organization, String location, String intention) {
+        this.id = id;
+        this.user = user;
         this.organization = organization;
         this.location = location;
         this.intention = intention;
     }
 
-    public Admin(Long id, String name, String email, String password, RoleType roleType, boolean profileCompleted, String organization, String location, String intention) {
-        super(id, name, email, password, roleType, profileCompleted);
+    public AdminProfile(Users user, String organization, String location, String intention) {
+        this.user = user;
         this.organization = organization;
         this.location = location;
         this.intention = intention;
     }
 
-    public Admin(String name, String email, String password, RoleType roleType, boolean profileCompleted, String organization, String location, String intention) {
-        super(name, email, password, roleType, profileCompleted);
-        this.organization = organization;
-        this.location = location;
-        this.intention = intention;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 
     public String getOrganization() {

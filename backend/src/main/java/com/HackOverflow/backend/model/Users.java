@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Users {
 
     @Id
@@ -23,11 +22,10 @@ public class Users {
 
     private boolean profileCompleted = false;
 
-    public Users() {
-    }
+    // constructors
+    public Users() {}
 
-    public Users(Long id, String name, String email, String password, RoleType roleType, boolean profileCompleted) {
-        this.id = id;
+    public Users(String name, String email, String password, RoleType roleType, boolean profileCompleted) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -35,7 +33,8 @@ public class Users {
         this.profileCompleted = profileCompleted;
     }
 
-    public Users(String name, String email, String password, RoleType roleType, boolean profileCompleted) {
+    public Users(Long id, String name, String email, String password, RoleType roleType, boolean profileCompleted) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
