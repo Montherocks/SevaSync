@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart Resource Allocation | NGO Operations Dashboard</title>
+<meta name="description" content="A modern teal-to-blue NGO operations dashboard for Smart Resource Allocation: KPIs, upcoming tasks calendar and completed tasks log." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/dashfinal.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L19 9.5l-3.6 3.1L16.4 18 12 15.5 7.6 18l1-5.4L5 9.5l5.1-1.9L12 3z"/></svg>
+        </div>
+        <div>
+          <p class="brand-eyebrow">Smart Resource Allocation</p>
+          <h1 class="brand-title">NGO Operations Dashboard</h1>
+        </div>
+      </div>
+      <div class="user-area">
+        <button class="icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+          <span class="dot"></span>
+        </button>
+        <div class="profile-chip">
+          <div class="avatar">A</div>
+          <div class="profile-meta">
+            <p class="profile-name">Asha Verma</p>
+            <p class="profile-role">Program Lead</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main">
+    <!-- KPI Cards -->
+    <section class="kpi-grid" aria-label="Key performance indicators">
+      <article class="kpi-card grad-1">
+        <div class="kpi-blob"></div>
+        <div class="kpi-row">
+          <div>
+            <p class="kpi-label">Total Volunteer Hours</p>
+            <p class="kpi-value"><span id="volunteerHours">0</span><span class="kpi-suffix">hrs</span></p>
+            <p class="kpi-trend" id="trendVolunteer"></p>
+          </div>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <article class="kpi-card grad-2">
+        <div class="kpi-blob"></div>
+        <div class="kpi-row">
+          <div>
+            <p class="kpi-label">Tasks Pending</p>
+            <p class="kpi-value"><span id="tasksPending">0</span></p>
+            <p class="kpi-trend" id="trendPending"></p>
+          </div>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+          </div>
+        </div>
+      </article>
+
+      <article class="kpi-card grad-3">
+        <div class="kpi-blob"></div>
+        <div class="kpi-row">
+          <div>
+            <p class="kpi-label">Tasks Completed</p>
+            <p class="kpi-value"><span id="tasksCompleted">0</span></p>
+            <p class="kpi-trend" id="trendCompleted"></p>
+          </div>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 25 / 75 split -->
+    <section class="split">
+      <!-- Left: Upcoming -->
+      <aside class="panel left-panel">
+        <header class="panel-head">
+          <h2>Next Upcoming Tasks</h2>
+          <p>Plan and prepare for what's ahead</p>
+        </header>
+
+        <div class="calendar" id="calendar">
+          <div class="cal-head">
+            <button class="cal-nav" id="prevMonth" aria-label="Previous month">‹</button>
+            <p class="cal-title" id="calTitle">Month Year</p>
+            <button class="cal-nav" id="nextMonth" aria-label="Next month">›</button>
+          </div>
+          <div class="cal-weekdays">
+            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+          </div>
+          <div class="cal-days" id="calDays"></div>
+        </div>
+
+        <div class="task-header">
+          <span class="task-title">Upcoming</span>
+          <span class="task-count" id="taskCount">0</span>
+        </div>
+
+        <ul class="task-list" id="taskList"></ul>
+      </aside>
+
+      <!-- Right: Completed -->
+      <section class="panel right-panel">
+        <header class="panel-head row">
+          <div>
+            <h2>Completed Tasks</h2>
+            <p>Recent volunteer contributions</p>
+          </div>
+          <div class="search">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input id="searchInput" type="search" placeholder="Search tasks or volunteers…" aria-label="Search completed tasks" />
+          </div>
+        </header>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Task Name</th>
+                <th class="num">Hours</th>
+                <th>Volunteer</th>
+                <th>Completed On</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+          <p class="empty" id="emptyState" hidden>No matching tasks found.</p>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">© <span id="year"></span> Smart Resource Allocation · Crafted for impact.</footer>
+  </main>
+
+  <script src="js/dashfinal.js"></script>
+</body>
+</html>
