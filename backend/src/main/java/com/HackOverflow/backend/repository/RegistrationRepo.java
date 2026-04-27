@@ -2,6 +2,7 @@ package com.HackOverflow.backend.repository;
 
 import com.HackOverflow.backend.model.AdminProfile;
 import com.HackOverflow.backend.model.Registration;
+import com.HackOverflow.backend.model.RegistrationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
