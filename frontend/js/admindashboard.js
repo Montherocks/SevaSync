@@ -172,6 +172,7 @@ function init() {
   // Create Event Button Click
 document.getElementById("createEventBtn").addEventListener("click", () => {
   showToast("Redirecting to Create Event page...", "success");
+  window.location.href = "createevent.html";
 
   // Later replace with actual navigation
   // window.location.href = "/create-event.html";
