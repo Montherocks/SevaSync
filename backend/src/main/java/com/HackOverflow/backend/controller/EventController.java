@@ -33,4 +33,23 @@ public class EventController {
     public ResponseEntity<List<Event>> getAllEvents() {
         return ResponseEntity.ok(eventService.getAllEvents());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Event> getEvent(@PathVariable Long id) {
+        return ResponseEntity.ok(eventService.getEventById(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateEvent(@PathVariable Long id,
+                                         @RequestBody EventRequestdto dto,
+                                         Principal principal) {
+        Event updated = eventService.updateEvent(id, dto, principal.getName());
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteEvent(@PathVariable Long id,
+                                         Principal principal) {
+        return ResponseEntity.ok(eventService.deleteEvent(id, principal.getName()));
+    }
 }

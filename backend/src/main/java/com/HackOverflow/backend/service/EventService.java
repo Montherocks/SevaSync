@@ -52,4 +52,40 @@ public class EventService {
 
         return eventRepository.save(event);
     }
+
+    public Event getEventById(Long id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+    }
+
+    public Event updateEvent(Long id, EventRequestdto dto, String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getRoleType() != RoleType.ADMIN) {
+            throw new RuntimeException("Unauthorized");
+        }
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+        event.setName(dto.getName());
+        event.setDescription(dto.getDescription());
+        event.setCategory(dto.getCategory());
+        event.setLocation(dto.getLocation());
+        event.setDate(dto.getDate());
+        event.setTime(dto.getTime());
+
+        return eventRepository.save(event);
+    }
+
+    public String deleteEvent(Long id, String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getRoleType() != RoleType.ADMIN) {
+            throw new RuntimeException("Unauthorized");
+        }
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        eventRepository.delete(event);
+        return "Event Deleted Successfully";
+    }
 }
