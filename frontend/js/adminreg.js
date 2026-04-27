@@ -2,7 +2,7 @@
 async function registerAdminDetails(payload) {
     const token = localStorage.getItem("jwtToken");
 
-    const response = await fetch("http://localhost:5501/admin/register", {
+    const response = await fetch("http://localhost:5501/auth/registeradmin", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -2,7 +2,7 @@
 async function registerVolunteerDetails(payload) {
     const token = localStorage.getItem("jwtToken");
 
-    const response = await fetch("http://localhost:5501/volunteer/register", {
+    const response = await fetch("http://localhost:5501/auth/registervolunteer", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
