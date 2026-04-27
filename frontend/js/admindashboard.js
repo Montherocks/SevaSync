@@ -197,6 +197,13 @@ document.getElementById("createEventBtn").addEventListener("click", () => {
 
 document.addEventListener("DOMContentLoaded", init);
 
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    localStorage.removeItem("jwtToken");
+
+    alert("Logged out successfully");
+
+    window.location.href = "index.html";
+});
 
 // ---- TEMP TEST DATA (REMOVE LATER) ----
 // function loadSampleData() {

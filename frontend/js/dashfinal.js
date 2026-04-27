@@ -194,6 +194,13 @@ renderCalendar();
 renderUpcoming();
 renderTable();
 
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    localStorage.removeItem("jwtToken");
+
+    alert("Logged out successfully");
+
+    window.location.href = "index.html";
+});
 // setKPIData({
 //   volunteerHours: 100,
 //   tasksPending: 3,
