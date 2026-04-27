@@ -57,8 +57,22 @@
         <input type="date" id="date" required>
 
         <h2>Time</h2>
-        <input type="time" id="time" required>
 
+       <div class="time-container">
+        <div class="time-box">
+            <label>Start Time</label>
+            <input type="time" id="startTime" required>
+        </div>
+
+        <div class="time-box">
+             <label>End Time</label>
+             <input type="time" id="endTime" required>
+        </div>
+
+        <div class="duration-display" id="durationText">
+            Duration: --
+        </div>
+        </div>
         <h2>Location</h2>
         <input type="text" id="location" placeholder="Road, City, State" required>
 
