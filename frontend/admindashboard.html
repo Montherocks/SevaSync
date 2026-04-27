@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/admindashboard.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner header-flex">
+
+      <!-- LEFT: Admin ID -->
+      <div class="header-left">
+        <div class="admin-info">
+          <i class="fa-solid fa-user"></i>
+            <span id="admin-id">Admin ID: --</span>
+        </div>
+      </div>
+
+      <!-- CENTER: Title -->
+      <div class="header-center">
+        <h1>Admin Panel</h1>
+        <p>Manage tasks, track progress, and approve volunteers</p>
+      </div>
+
+      <!-- RIGHT: Button -->
+      <div class="header-right">
+        <button class="create-btn" id="createEventBtn">
+          <i class="fa-solid fa-plus"></i> Create Event
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container main">
+    <!-- Dashboard Cards -->
+    <section class="cards" id="cards" aria-label="Dashboard summary">
+      <button class="card" data-section="active">
+        <div class="card-top">
+          <div>
+            <p class="card-label">Active Tasks</p>
+            <p class="card-count" id="count-active">0</p>
+          </div>
+          <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
+        </div>
+        <p class="card-foot">Click to view details &rarr;</p>
+      </button>
+
+      <button class="card" data-section="pending">
+        <div class="card-top">
+          <div>
+            <p class="card-label">Pending Tasks</p>
+            <p class="card-count" id="count-pending">0</p>
+          </div>
+          <div class="card-icon"><i class="fa-regular fa-clock"></i></div>
+        </div>
+        <p class="card-foot">Click to view details &rarr;</p>
+      </button>
+
+      <button class="card" data-section="completed">
+        <div class="card-top">
+          <div>
+            <p class="card-label">Completed Tasks</p>
+            <p class="card-count" id="count-completed">0</p>
+          </div>
+          <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+        <p class="card-foot">Click to view details &rarr;</p>
+      </button>
+
+      <button class="card" data-section="volunteers">
+        <div class="card-top">
+          <div>
+            <p class="card-label">Volunteer Approval</p>
+            <p class="card-count" id="count-volunteers">0</p>
+          </div>
+          <div class="card-icon"><i class="fa-solid fa-user-check"></i></div>
+        </div>
+        <p class="card-foot">Click to view details &rarr;</p>
+      </button>
+    </section>
+
+    <!-- Detail Panel -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2 id="panel-title">Active Tasks</h2>
+        <p id="panel-subtitle">Tasks currently in progress.</p>
+      </div>
+      <div class="panel-body" id="panel-body">
+        <!-- Dynamic content injected by JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="js/admindashboard.js"></script>
+</body>
+</html>
