@@ -193,6 +193,43 @@ document.getElementById('year').textContent = new Date().getFullYear();
 renderCalendar();
 renderUpcoming();
 renderTable();
+loadVolunteerProfile();
+
+async function loadVolunteerProfile() {
+  const token = localStorage.getItem("jwtToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/volunteer/profile", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch volunteer profile");
+    }
+
+    const volunteer = await response.json();
+
+    document.getElementById("volunteerName").textContent =
+      volunteer.name || "Volunteer";
+
+    document.getElementById("volunteerRole").textContent =
+      "Volunteer";
+
+    document.getElementById("volunteerAvatar").textContent =
+      (volunteer.name?.charAt(0) || "V").toUpperCase();
+
+  } catch (error) {
+    console.error("Profile Load Error:", error);
+  }
+}
 
 document.getElementById("logoutBtn").addEventListener("click", function () {
     localStorage.removeItem("jwtToken");

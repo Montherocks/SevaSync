@@ -1,8 +1,9 @@
-
 async function registerVolunteerDetails(payload) {
     const token = localStorage.getItem("jwtToken");
 
-    const response = await fetch("http://localhost:5501/auth/registervolunteer", {
+    console.log("Stored Token:", token);
+
+    const response = await fetch("http://localhost:8080/auth/registervolunteer", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -11,7 +12,19 @@ async function registerVolunteerDetails(payload) {
         body: JSON.stringify(payload)
     });
 
-    return await response.json();
+    let data = {};
+
+    try {
+        data = await response.json();
+    } catch (error) {
+        data = {};
+    }
+
+    if (!response.ok) {
+        throw new Error(data.message || "Volunteer registration failed");
+    }
+
+    return data;
 }
 
 async function handleVolunteerFinish() {
@@ -22,13 +35,16 @@ async function handleVolunteerFinish() {
         availabilityEnd: document.getElementById("endDate").value
     };
 
-    const response = await registerVolunteerDetails(payload);
+    try {
+        const response = await registerVolunteerDetails(payload);
 
-    if (response.success) {
+        console.log("Volunteer Registration Response:", response);
+
         window.location.href = "dashfinal.html";
-    } 
-    else {
-        alert(response.message || "Volunteer registration failed");
+
+    } catch (error) {
+        console.error("Volunteer Registration Error:", error);
+        alert(error.message);
     }
 }
 

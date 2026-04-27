@@ -1,6 +1,5 @@
 package com.HackOverflow.backend.repository;
 
-import com.HackOverflow.backend.model.AdminProfile;
 import com.HackOverflow.backend.model.Registration;
 import com.HackOverflow.backend.model.RegistrationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +16,5 @@ public interface RegistrationRepo extends JpaRepository<Registration, Long> {
     Optional<Registration> findByUserIdAndEventId(Long id, Long eventId);
     List<Registration> findByUserIdAndStatus(Long userId, RegistrationStatus status);
     List<Registration> findByUserId(Long id);
+    List<Registration> findByStatus(RegistrationStatus status);
 }

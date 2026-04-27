@@ -23,7 +23,14 @@ public class Event {
     private String category;
     private String location;
     private LocalDate date;
-    private LocalTime time;
+    private LocalTime startTime;
+    private LocalTime endTime;
+
+    private String timeZone = "Asia/Kolkata";
+
+    private Double durationHours;
+
+    private String status; // PENDING, ACTIVE, COMPLETED
 
     @ManyToOne
     @JsonIgnore
