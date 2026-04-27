@@ -1,0 +1,159 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #d9e9ff, #b7d3ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* BACK BUTTON */
+.back-arrow {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  font-size: 2rem;
+  text-decoration: none;
+  color: #2f5fb3;
+  font-weight: bold;
+}
+
+/* MAIN CARD */
+.auth-container {
+  width: 900px;
+  max-width: 95%;
+  min-height: 550px;
+  display: flex;
+  border-radius: 18px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+
+/* LEFT IMAGE PANEL */
+.left-panel {
+  flex: 1;
+  background: linear-gradient(135deg, #7aa8ff, #9cbcff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px; 
+}
+
+/* IMAGE FRAME */
+.left-panel .image-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* IMAGE FIT */
+.left-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  border-radius: 18px;
+}
+
+
+/* RIGHT FORM PANEL */
+.right-panel {
+  flex: 1;
+  background: #f7fbff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 65px 55px;
+}
+
+/* FORM LAYOUT */
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 28px; 
+}
+
+/* FORM HEADING */
+.form-heading {
+  font-size: 2rem;
+  color: #2f5fb3;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* INPUTS */
+input,
+select {
+  width: 100%;
+  padding: 16px 18px; 
+  border: 1px solid #c7d8f5;
+  border-radius: 25px;
+  outline: none;
+  font-size: 1rem;
+  background: white;
+}
+
+/* DATE LABEL */
+.date-label {
+  color: #2f5fb3;
+  font-size: 0.95rem;
+  margin-bottom: -12px;
+}
+
+/* DATE RANGE */
+.date-range {
+  display: flex;
+  gap: 18px; 
+}
+
+/* BUTTON */
+button {
+  margin-top: 8px;
+  padding: 16px;
+  border: none;
+  border-radius: 25px;
+  background: #2f5fb3;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #244a8f;
+}
+
+/* RESPONSIVE */
+@media(max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .left-panel {
+    height: 250px;
+  }
+
+  .right-panel {
+    padding: 30px;
+  }
+
+  .date-range {
+    flex-direction: column;
+  }
+}
