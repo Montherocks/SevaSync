@@ -127,12 +127,22 @@ function renderUpcoming(){
 /* ---------- Completed table ---------- */
 function renderTable(filter=""){
   const body = document.getElementById('tableBody');
-  const empty = document.getElementById('emptyState');
+  const emptyBlock = document.getElementById('emptyBlock');
+
   const q = filter.trim().toLowerCase();
+
   const rows = completedTasks.filter(t =>
     !q || t.name.toLowerCase().includes(q) || t.volunteer.toLowerCase().includes(q)
   );
-  empty.hidden = rows.length !== 0;
+
+  if(rows.length === 0){
+    body.innerHTML = "";
+    emptyBlock.hidden = false;
+    return;
+  }
+
+  emptyBlock.hidden = true;
+
   body.innerHTML = rows.map(t=>`
     <tr>
       <td>${t.name}</td>

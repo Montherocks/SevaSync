@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <link rel="stylesheet" href="css/createvent.css">
+</head>
+<body>
+
+<a href="admindashboard.html" class="back-arrow">←</a>
+
+<div class="event-form-container">
+    <form id="eventForm">
+
+        <h1>Create Event</h1>
+
+        <input type="text" id="eventName" placeholder="Event Name" required>
+
+        <textarea id="description" placeholder="Event Description" required></textarea>
+
+        <h2>Category</h2>
+
+        <div class="category-grid">
+            <label>
+                <input type="radio" name="category" value="Tree Planting" required>
+                <img src="images/treeplanting.jpg">
+                <span>Tree Planting</span>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="Park Cleanup">
+                <img src="images/parkcleanup.jpg">
+                <span>Park Cleanup</span>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="River Cleanup">
+                <img src="images/rivercleanup.jpg">
+                <span>River Cleanup</span>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="Food Distribution">
+                <img src="images/fooddistribution.jpg">
+                <span>Food Distribution</span>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="Clothes Distribution">
+                <img src="images/clothesdistribution.jpg">
+                <span>Clothes Distribution</span>
+            </label>
+        </div>
+
+        <h2>Date</h2>
+        <input type="date" id="date" required>
+
+        <h2>Time</h2>
+        <input type="time" id="time" required>
+
+        <h2>Location</h2>
+        <input type="text" id="location" placeholder="Road, City, State" required>
+
+        <button type="submit">Create Event</button>
+
+    </form>
+</div>
+
+<script src="js/createevent.js"></script>
+</body>
+</html>

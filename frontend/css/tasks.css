@@ -1,0 +1,162 @@
+/* =========================
+FILE: tasks.css
+SevaSync Dashboard Theme
+========================= */
+
+:root{
+  --teal:#10b8a6;
+  --cyan:#22b8e6;
+  --blue:#1f6fd4;
+  --deep-blue:#143a82;
+
+  --bg:#f4fafd;
+  --surface:#ffffff;
+  --text:#13243d;
+  --muted:#5b6b82;
+  --border:#dbe7ef;
+
+  --grad-brand: linear-gradient(135deg,var(--teal) 0%, var(--cyan) 50%, var(--deep-blue) 100%);
+  --grad-header: linear-gradient(90deg,var(--teal) 0%, var(--cyan) 50%, var(--blue) 100%);
+  --grad-app: linear-gradient(180deg,#eef8fb 0%, #e7f1f8 100%);
+
+  --shadow-soft: 0 4px 20px -4px rgba(15,90,140,.08);
+  --shadow-card: 0 10px 30px -10px rgba(15,90,140,.25);
+
+  --radius: 16px;
+  --t: .3s cubic-bezier(.4,0,.2,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:'Inter','Segoe UI',sans-serif;
+    background: var(--grad-app);
+    color: var(--text);
+    min-height:100vh;
+    padding:40px;
+}
+
+.tasks-container{
+    max-width:1500px;
+    margin:auto;
+}
+
+.tasks-container h1{
+    text-align:center;
+    font-size:3rem;
+    margin-bottom:50px;
+    background: var(--grad-header);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    font-weight:800;
+}
+
+.tasks-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+}
+
+.task-card{
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: var(--shadow-card);
+    transition: var(--t);
+}
+
+.task-card:hover{
+    transform: translateY(-8px);
+}
+
+.task-card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.task-content{
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.task-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:14px;
+}
+
+.task-header h2{
+    font-size:1.35rem;
+    color:var(--deep-blue);
+    font-weight:700;
+}
+
+.category{
+    background: var(--grad-brand);
+    color:white;
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:.78rem;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.task-content p{
+    color: var(--muted);
+    line-height:1.6;
+    font-size:.98rem;
+    min-height:75px;
+}
+
+.task-details{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    font-size:.92rem;
+    color: var(--blue);
+    font-weight:600;
+}
+
+.task-card button{
+    margin-top:10px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background: var(--grad-header);
+    color:white;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:var(--t);
+}
+
+.task-card button:hover{
+    transform:scale(1.03);
+    box-shadow: var(--shadow-soft);
+}
+
+.task-card button:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+@media (max-width:1100px){
+    .tasks-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media (max-width:768px){
+    .tasks-grid{
+        grid-template-columns:1fr;
+    }
+
+    .tasks-container h1{
+        font-size:2.3rem;
+    }
+}
