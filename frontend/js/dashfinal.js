@@ -162,7 +162,7 @@ function setKPIData(data){
 
   // HARD-CODED DASHBOARD VALUES (FOR NOW)
   const hours = 2;
-  const pending = 4;
+  const pending = 5;
   const active = 2;
   const completed = 0;
 
@@ -211,7 +211,7 @@ async function loadDashboard() {
 
     setKPIData({
         volunteerHours: 2,
-        tasksPending: 4,
+        tasksPending: 5s,
         tasksActive: 2,
         tasksCompleted: 0
     });
