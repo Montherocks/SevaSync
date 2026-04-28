@@ -58,7 +58,7 @@ public class EventRegistrationService {
         return "Registration Cancelled";
     }
 
-    // MY REGISTRATIONS (THIS FIXES YOUR ERROR)
+    // MY REGISTRATIONS
     public List<RegistrationAdminDTO> getMyRegistrations(String email) {
 
         Users user = userRepository.findByEmail(email)
