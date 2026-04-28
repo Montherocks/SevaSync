@@ -76,7 +76,15 @@ document.addEventListener("DOMContentLoaded", async function () {
                         ${isRegistered ? "Registered ✔" : "Register"}
                     </button>
 
+                    <button 
+                        class="ai-btn"
+                        onclick="checkAI(${event.id}, this)"
+                    >
+                        Summarise / Check AI
+                    </button>
+
                 </div>
+                <div class="ai-result" id="ai-${String(event.id)}" style="display:none;"></div>
             `;
 
             tasksGrid.appendChild(card);
@@ -121,4 +129,49 @@ async function registerTask(eventId, button) {
         button.disabled = false;
         alert(error.message);
     }
+}
+
+//ai button
+async function checkAI(eventId, button) {
+
+    const BASE_URL = "http://localhost:8080";
+    const token = localStorage.getItem("jwtToken");
+
+    const resultBox = document.getElementById(`ai-${eventId}`);
+
+    // 🚨 SAFETY CHECK (IMPORTANT)
+    if (!resultBox) {
+        console.error("AI result box not found for event:", eventId);
+        alert("UI error: AI box not found");
+        return;
+    }
+
+    button.innerText = "Checking...";
+    button.disabled = true;
+
+    try {
+        const res = await fetch(`${BASE_URL}/ai/check/${eventId}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!res.ok) throw new Error("AI request failed");
+
+        const data = await res.json();
+
+        resultBox.style.display = "block";
+
+        resultBox.innerHTML = `
+            <p><b>Summary:</b> ${data.summary}</p>
+            <p><b>Skill Match:</b> ${data.skillMatch}</p>
+            <p><b>Eligibility:</b> ${data.eligibility}</p>
+        `;
+
+    } catch (error) {
+        alert(error.message);
+    }
+
+    button.innerText = "Summarise / Check AI";
+    button.disabled = false;
 }

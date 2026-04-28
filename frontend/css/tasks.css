@@ -160,3 +160,52 @@ body{
         font-size:2.3rem;
     }
 }
+
+.ai-result {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: #f8f9ff;
+    border-left: 4px solid #6c5ce7;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #2d3436;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+.ai-result p {
+    margin: 6px 0;
+}
+
+.ai-result b {
+    color: #6c5ce7;
+}
+
+/* Smooth appearance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Optional: better AI button */
+.ai-btn {
+    background: #6c5ce7;
+    color: white;
+    margin-left: 8px;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.ai-btn:hover {
+    background: #5a4bd6;
+}
