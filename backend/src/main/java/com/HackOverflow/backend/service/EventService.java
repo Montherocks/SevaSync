@@ -46,8 +46,8 @@ public class EventService {
         event.setCategory(dto.getCategory());
         event.setLocation(dto.getLocation());
         event.setDate(dto.getDate());
-        event.setTime(dto.getTime());
-
+        event.setStartTime(dto.getStartTime());
+        event.setEndTime(dto.getEndTime());
         event.setAdmin(admin);
 
         return eventRepository.save(event);
@@ -71,7 +71,8 @@ public class EventService {
         event.setCategory(dto.getCategory());
         event.setLocation(dto.getLocation());
         event.setDate(dto.getDate());
-        event.setTime(dto.getTime());
+        event.setStartTime(dto.getStartTime());
+        event.setEndTime(dto.getEndTime());
 
         return eventRepository.save(event);
     }

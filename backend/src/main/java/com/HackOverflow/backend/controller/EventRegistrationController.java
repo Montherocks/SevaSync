@@ -15,8 +15,8 @@ public class EventRegistrationController {
     @Autowired
     private EventRegistrationService registrationService;
 
-    @PostMapping
-    public String register(@RequestParam Long eventId, Principal principal) {
+    @PostMapping("/{eventId}")
+    public String register(@PathVariable Long eventId, Principal principal) {
         return registrationService.register(eventId, principal.getName());
     }
 

@@ -17,5 +17,6 @@ public class EventRequestdto {
     private String category;
     private String location;
     private LocalDate date;
-    private LocalTime time;
+    private LocalTime startTime;
+    private LocalTime endTime;
 }
