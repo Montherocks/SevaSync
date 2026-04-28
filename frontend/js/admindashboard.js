@@ -1,77 +1,113 @@
 /* ============================================================
-   Admin Dashboard – data, rendering, and interactions
+   Admin Dashboard – API-driven version (UPDATED)
    ============================================================ */
 
+// ---- STATE ----
 const data = {
-  active: [],
-  pending: [],
-  completed: [],
-  volunteers: [],
+  active: 0,
+  pending: 0,
+  completed: 0,
+  volunteers: []
 };
 
-// ---- Section meta (titles + subtitles) ----
+let completedList = [];
+let currentSection = "active";
+
+// ---- META ----
 const sectionMeta = {
-  active:     { title: "Active Tasks",        subtitle: "Tasks currently in progress." },
-  pending:    { title: "Pending Tasks",       subtitle: "Tasks scheduled for the future." },
-  completed:  { title: "Completed Tasks",     subtitle: "History of finished tasks." },
+  active:     { title: "Active Tasks", subtitle: "Tasks currently in progress." },
+  pending:    { title: "Pending Tasks", subtitle: "Tasks scheduled for the future." },
+  completed:  { title: "Completed Tasks", subtitle: "History of finished tasks." },
   volunteers: { title: "Volunteer Approvals", subtitle: "Review and approve volunteer applications." },
 };
 
-let currentSection = "active";
-
-// ---- Helpers ----
+// ---- HELPERS ----
 const $ = (sel) => document.querySelector(sel);
-const escapeHtml = (s) =>
-  String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-const initials = (name) =>
-  name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
 
-// ---- Update card counts ----
+const escapeHtml = (s) =>
+  String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])
+  );
+
+const initials = (name) =>
+  (name || "")
+    .split(" ")
+    .map(n => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+// ---- COUNTS ----
 function updateCounts() {
-  $("#count-active").textContent     = data.active.length;
-  $("#count-pending").textContent    = data.pending.length;
-  $("#count-completed").textContent  = data.completed.length;
+  $("#count-active").textContent = data.active;
+  $("#count-pending").textContent = data.pending;
+  $("#count-completed").textContent = data.completed;
   $("#count-volunteers").textContent = data.volunteers.length;
 }
 
-// ---- Render helpers ----
-function emptyState(label) {
+// ---- EMPTY ----
+function emptyState(msg) {
   return `
     <div class="empty">
       <div class="empty-icon"><i class="fa-solid fa-inbox"></i></div>
-      <p>${escapeHtml(label)}</p>
-    </div>`;
+      <p>${escapeHtml(msg)}</p>
+    </div>
+  `;
 }
 
-function renderTaskList(tasks, dateLabel, dateKey, emptyLabel) {
-  if (!tasks.length) return emptyState(emptyLabel);
+// ---- COMPLETED LIST ----
+function renderCompletedList() {
+  if (!completedList.length) return emptyState("No completed tasks yet.");
+
   return `
     <ul class="task-list">
-      ${tasks.map((t) => `
+      ${completedList.map(e => `
+
         <li class="task-item">
-          <span class="task-icon"><i class="fa-solid fa-bolt"></i></span>
+          <span class="task-icon"><i class="fa-solid fa-circle-check"></i></span>
+
           <div class="task-text">
-            <p class="task-title">${escapeHtml(t.title)}</p>
-            ${t[dateKey] ? `<p class="task-meta">${dateLabel}: ${escapeHtml(t[dateKey])}</p>` : ""}
+
+            <p class="task-title">
+              ${escapeHtml(
+                typeof (e.name || e.title) === "object"
+                  ? (e.name?.name || e.title?.name || JSON.stringify(e.name || e.title))
+                  : (e.name || e.title)
+              )}
+            </p>
+
+            <p class="task-meta">
+              Ended: ${escapeHtml(
+                typeof e.endTime === "object"
+                  ? JSON.stringify(e.endTime)
+                  : e.endTime || "N/A"
+              )}
+            </p>
+
           </div>
         </li>
+
       `).join("")}
-    </ul>`;
+    </ul>
+  `;
 }
 
+// ---- VOLUNTEERS ----
 function renderVolunteers(volunteers) {
-  if (!volunteers.length) return emptyState("All caught up — no pending approvals.");
+  if (!volunteers.length) return emptyState("No pending approvals.");
+
   return `
     <ul class="volunteer-list">
-      ${volunteers.map((v) => `
+      ${volunteers.map(v => `
         <li class="volunteer-item" data-id="${v.id}">
           <div class="volunteer-info">
-            <div class="avatar">${escapeHtml(initials(v.name))}</div>
+            <div class="avatar">${escapeHtml(initials(v.userName))}</div>
             <div>
-              <p class="volunteer-name">${escapeHtml(v.name)}</p>
-              <p class="volunteer-task">Applied for: ${escapeHtml(v.task)}</p>
+              <p class="volunteer-name">${escapeHtml(v.userName)}</p>
+              <p class="volunteer-task">Applied for: ${escapeHtml(v.eventName)}</p>
             </div>
           </div>
+
           <div class="volunteer-actions">
             <button class="btn btn-approve" data-action="approve" data-id="${v.id}">
               <i class="fa-solid fa-check"></i> Approve
@@ -82,162 +118,170 @@ function renderVolunteers(volunteers) {
           </div>
         </li>
       `).join("")}
-    </ul>`;
+    </ul>
+  `;
 }
 
-// ---- Render the active section ----
-function renderSection(section) {
+// ---- RENDER SECTION ----
+async function renderSection(section) {
   currentSection = section;
 
-  // Highlight active card
-  document.querySelectorAll(".card").forEach((c) => {
-    c.classList.toggle("active", c.dataset.section === section);
-  });
+  document.querySelectorAll(".card").forEach(c =>
+    c.classList.toggle("active", c.dataset.section === section)
+  );
 
-  // Update titles
-  $("#panel-title").textContent    = sectionMeta[section].title;
+  $("#panel-title").textContent = sectionMeta[section].title;
   $("#panel-subtitle").textContent = sectionMeta[section].subtitle;
 
-  // Render body
   const body = $("#panel-body");
-  switch (section) {
-    case "active":
-      body.innerHTML = renderTaskList(data.active, "Due", "due", "No active tasks.");
-      break;
-    case "pending":
-      body.innerHTML = renderTaskList(data.pending, "Scheduled", "due", "No pending tasks.");
-      break;
-    case "completed":
-      body.innerHTML = renderTaskList(data.completed, "Completed", "completedOn", "No completed tasks yet.");
-      break;
-    case "volunteers":
-      body.innerHTML = renderVolunteers(data.volunteers);
-      break;
+
+  if (section === "completed") {
+    await loadCompletedList();
+    body.innerHTML = renderCompletedList();
+    return;
+  }
+
+  if (section === "active") {
+    body.innerHTML = emptyState("Active tasks are shown as count only.");
+    return;
+  }
+
+  if (section === "pending") {
+    body.innerHTML = emptyState("Pending tasks are shown as count only.");
+    return;
+  }
+
+  if (section === "volunteers") {
+    body.innerHTML = renderVolunteers(data.volunteers);
+    return;
   }
 }
 
-// ---- Toast notifications ----
-function showToast(message, type = "success") {
+// ---- TOAST ----
+function showToast(msg, type = "success") {
   const container = $("#toast-container");
+
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
-  toast.textContent = message;
+  toast.textContent = msg;
+
   container.appendChild(toast);
+
   setTimeout(() => {
     toast.style.opacity = "0";
-    toast.style.transition = "opacity 0.3s ease";
     setTimeout(() => toast.remove(), 300);
   }, 2400);
 }
 
-// ---- Volunteer actions ----
+// ---- VOLUNTEER ACTIONS ----
 function handleVolunteerAction(action, id) {
-  const idx = data.volunteers.findIndex((v) => v.id === id);
+  const idx = data.volunteers.findIndex(v => v.id === id);
   if (idx === -1) return;
+
   const v = data.volunteers[idx];
   data.volunteers.splice(idx, 1);
+
   updateCounts();
   renderSection("volunteers");
 
-  if (action === "approve") {
-    showToast(`${v.name} approved for "${v.task}"`, "success");
-  } else {
-    showToast(`${v.name}'s application rejected`, "error");
-  }
+  showToast(
+    action === "approve"
+      ? `${v.userName} approved`
+      : `${v.userName} rejected`,
+    action === "approve" ? "success" : "error"
+  );
 }
 
+// ---- LOAD COUNTS ----
+async function loadCounts() {
+  const token = localStorage.getItem("jwtToken");
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const [a, p, c] = await Promise.all([
+    fetch("http://localhost:8080/admin/tasks/active/count", { headers }),
+    fetch("http://localhost:8080/admin/tasks/pending/count", { headers }),
+    fetch("http://localhost:8080/admin/tasks/completed/count", { headers })
+  ]);
+
+  const activeJson = await a.json();
+  const pendingJson = await p.json();
+  const completedJson = await c.json();
+
+  // ✅ FIX HERE (adjust key if needed)
+  data.active = activeJson.count ?? activeJson;
+  data.pending = pendingJson.count ?? pendingJson;
+  data.completed = completedJson.count ?? completedJson;
+
+  updateCounts();
+}
+
+// ---- LOAD COMPLETED LIST ----
+async function loadCompletedList() {
+  const token = localStorage.getItem("jwtToken");
+
+  const res = await fetch("http://localhost:8080/admin/tasks/completed", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  completedList = await res.json();
+}
+
+// ---- LOAD VOLUNTEERS ----
+async function loadVolunteers() {
+  const token = localStorage.getItem("jwtToken");
+
+  const res = await fetch("http://localhost:8080/register/all", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  data.volunteers = await res.json();
+  updateCounts();
+}
+
+// ---- ADMIN PROFILE ----
 async function loadAdminDetails() {
   const token = localStorage.getItem("jwtToken");
 
-  if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  try {
-    const res = await fetch("http://localhost:8080/admin/profile", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch admin data");
-    }
-
-    const admin = await res.json();
-
-    document.getElementById("adminName").textContent =
-      admin.name || "Admin";
-
-    document.getElementById("adminAvatar").textContent =
-      (admin.name?.charAt(0) || "A").toUpperCase();
-
-  } catch (err) {
-    console.error("Admin Profile Error:", err);
-
-    document.getElementById("adminName").textContent =
-      "Admin";
-  }
-}
-// ---- Event wiring ----
-function init() {
-  // Create Event Button Click
-document.getElementById("createEventBtn").addEventListener("click", () => {
-  showToast("Redirecting to Create Event page...", "success");
-  window.location.href = "createevent.html";
-
-  // Later replace with actual navigation
-  // window.location.href = "/create-event.html";
-});
-  // Card clicks
-  document.querySelectorAll(".card").forEach((card) => {
-    card.addEventListener("click", () => renderSection(card.dataset.section));
+  const res = await fetch("http://localhost:8080/admin/profile", {
+    headers: { Authorization: `Bearer ${token}` }
   });
 
-  // Delegated approve/reject buttons
-  $("#panel-body").addEventListener("click", (e) => {
+  const admin = await res.json();
+
+  $("#adminName").textContent = admin.name || "Admin";
+  $("#adminAvatar").textContent = (admin.name?.charAt(0) || "A").toUpperCase();
+}
+
+// ---- INIT ----
+async function init() {
+  document.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("click", () =>
+      renderSection(card.dataset.section)
+    );
+  });
+
+  $("#panel-body").addEventListener("click", e => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
+
     handleVolunteerAction(btn.dataset.action, Number(btn.dataset.id));
   });
 
-  updateCounts();
-  renderSection("active");
+  document.getElementById("createEventBtn").onclick = () => {
+    showToast("Redirecting...");
+    window.location.href = "createevent.html";
+  };
+
+  document.getElementById("logoutBtn").onclick = () => {
+    localStorage.removeItem("jwtToken");
+    window.location.href = "index.html";
+  };
+
+  await loadCounts();
+  await loadVolunteers();
   loadAdminDetails();
-  //loadSampleData()
+
+  renderSection("active");
 }
 
 document.addEventListener("DOMContentLoaded", init);
-
-document.getElementById("logoutBtn").addEventListener("click", function () {
-    localStorage.removeItem("jwtToken");
-
-    alert("Logged out successfully");
-
-    window.location.href = "index.html";
-});
-
-// ---- TEMP TEST DATA (REMOVE LATER) ----
-// function loadSampleData() {
-//   data.active = [
-//     { id: 1, title: "Community cleanup drive", due: "Today" },
-//     { id: 2, title: "Food distribution – Sector 12", due: "Tomorrow" },
-//   ];
-
-//   data.pending = [
-//     { id: 11, title: "Tree plantation event", due: "May 02" },
-//   ];
-
-//   data.completed = [
-//     { id: 21, title: "Beach cleanup", completedOn: "Apr 18" },
-//   ];
-
-//   data.volunteers = [
-//     { id: 101, name: "Aarav Sharma", task: "Tree plantation event" },
-//   ];
-
-//   updateCounts();
-//   renderSection("active");
-// }
