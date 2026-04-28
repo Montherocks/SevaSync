@@ -1,168 +1,273 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Smart Resource Allocation | NGO Operations Dashboard</title>
-<meta name="description" content="A modern teal-to-blue NGO operations dashboard for Smart Resource Allocation: KPIs, upcoming tasks calendar and completed tasks log." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/dashfinal.css" />
-</head>
-<body>
-  <!-- Header -->
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <div class="brand">
-        <div class="brand-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L19 9.5l-3.6 3.1L16.4 18 12 15.5 7.6 18l1-5.4L5 9.5l5.1-1.9L12 3z"/></svg>
-        </div>
-        <div>
-          <p class="brand-eyebrow">Smart Resource Allocation</p>
-          <h1 class="brand-title">NGO Operations Dashboard</h1>
-        </div>
+/* ---------- Data ---------- */
+const addDays = (n) => {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  d.setHours(9, 30, 0, 0);
+  return d;
+};
+
+let upcomingTasks = [];
+let completedTasks = [];
+let kpiData = {
+  volunteerHours: 0,
+  tasksPending: 0,
+  tasksCompleted: 0
+};
+
+/* ---------- Count-up KPI animation ---------- */
+function animateCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target = +el.dataset.count;
+    const dur = 1200;
+    const start = performance.now();
+    const tick = (now)=>{
+      const p = Math.min(1,(now-start)/dur);
+      const eased = 1 - Math.pow(1-p,3);
+      el.textContent = Math.round(eased*target).toLocaleString();
+      if(p<1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+/* ---------- Calendar ---------- */
+let viewDate = new Date();
+let selectedDate = new Date();
+const MONTHS = ["January","February","March","April","May","June",
+  "July","August","September","October","November","December"];
+
+function sameDay(a,b){
+  return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+}
+
+function renderCalendar(){
+  const title = document.getElementById('calTitle');
+  const grid = document.getElementById('calDays');
+  const y = viewDate.getFullYear(), m = viewDate.getMonth();
+  title.textContent = `${MONTHS[m]} ${y}`;
+
+  const first = new Date(y,m,1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const prevDays = new Date(y,m,0).getDate();
+  const today = new Date();
+
+  const cells = [];
+  for(let i=startDay-1;i>=0;i--){
+    cells.push({ d:prevDays-i, muted:true, date:new Date(y,m-1,prevDays-i) });
+  }
+  for(let d=1; d<=daysInMonth; d++){
+    cells.push({ d, muted:false, date:new Date(y,m,d) });
+  }
+  while(cells.length % 7 !== 0){
+    const d = cells.length - (startDay+daysInMonth) + 1;
+    cells.push({ d, muted:true, date:new Date(y,m+1,d) });
+  }
+
+  grid.innerHTML = cells.map(c=>{
+    const isToday = sameDay(c.date,today) && !c.muted;
+    const hasTask = upcomingTasks.some(t=>sameDay(t.date,c.date)) && !c.muted;
+    const cls = ['day'];
+    if(c.muted) cls.push('muted');
+    if(isToday) cls.push('today');
+    if(hasTask) cls.push('has-task');
+    return `<div class="${cls.join(' ')}" data-date="${c.date.toISOString()}">${c.d}</div>`;
+  }).join('');
+}
+
+document.getElementById('calDays').addEventListener('click', (e) => {
+  const day = e.target.closest('.day');
+  if (!day || day.classList.contains('muted')) return;
+
+  selectedDate = new Date(day.dataset.date);
+
+  // Highlight selected day
+  document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+  day.classList.add('selected');
+
+  renderUpcoming(); // update tasks
+});
+
+document.getElementById('prevMonth').addEventListener('click',()=>{
+  viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()-1, 1);
+  renderCalendar();
+});
+document.getElementById('nextMonth').addEventListener('click',()=>{
+  viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 1);
+  renderCalendar();
+});
+
+/* ---------- Upcoming task list ---------- */
+function renderUpcoming(){
+  const list = document.getElementById('taskList');
+  const fmt = new Intl.DateTimeFormat('en',{ month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+
+  // Filter tasks: show tasks on or AFTER selected date
+  const filteredTasks = upcomingTasks.filter(t => t.date >= selectedDate);
+
+  if(filteredTasks.length === 0){
+    list.innerHTML = `<p class="empty">No tasks scheduled. Enjoy the calm!</p>`;
+    return;
+  }
+
+  list.innerHTML = filteredTasks.map(t=>`
+    <li class="task-item">
+      <p class="task-name">${t.name}</p>
+      <div class="task-meta">
+        <span>📅 ${fmt.format(t.date)}</span>
+        <span>📍 ${t.location}</span>
       </div>
-      <div class="user-area">
-        <button class="icon-btn" aria-label="Notifications">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
-          <span class="dot"></span>
-        </button>
-        <button id="logoutBtn">Logout</button>
-        <div class="profile-chip">
-          <div class="avatar" id="volunteerAvatar">V</div>
-           <div class="profile-meta">
-           <p class="profile-name" id="volunteerName">Volunteer Name</p>
-           <p class="profile-role" id="volunteerRole">Volunteer</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+      <p class="task-desc">${t.description}</p>
+    </li>
+  `).join('');
 
-  <main class="container main">
-    <!-- KPI Cards -->
-    <section class="kpi-grid" aria-label="Key performance indicators">
-      <article class="kpi-card grad-1">
-        <div class="kpi-blob"></div>
-        <div class="kpi-row">
-          <div>
-            <p class="kpi-label">Total Volunteer Hours</p>
-            <p class="kpi-value"><span id="volunteerHours">0</span><span class="kpi-suffix">hrs</span></p>
-            <p class="kpi-trend" id="trendVolunteer"></p>
-          </div>
-          <div class="kpi-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          </div>
-        </div>
-      </article>
+  document.getElementById('taskCount').textContent = filteredTasks.length;
+}
 
-      <article class="kpi-card grad-2">
-        <div class="kpi-blob"></div>
-        <div class="kpi-row">
-          <div>
-            <p class="kpi-label">Tasks Pending</p>
-            <p class="kpi-value"><span id="tasksPending">0</span></p>
-            <p class="kpi-trend" id="trendPending"></p>
-          </div>
-          <div class="kpi-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
-          </div>
-        </div>
-      </article>
-      <article class="kpi-card grad-2">
-        <div class="kpi-blob"></div>
-        <div class="kpi-row">
-          <div>
-            <p class="kpi-label">Tasks Active</p>
-            <p class="kpi-value"><span id="tasksActive">0</span></p>
-          </div>
-        </div>
-      </article>
-      <article class="kpi-card grad-3">
-        <div class="kpi-blob"></div>
-        <div class="kpi-row">
-          <div>
-            <p class="kpi-label">Tasks Completed</p>
-            <p class="kpi-value"><span id="tasksCompleted">0</span></p>
-            <p class="kpi-trend" id="trendCompleted"></p>
-          </div>
-          <div class="kpi-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-          </div>
-        </div>
-      </article>
-    </section>
+/* ---------- Completed table ---------- */
+function renderTable(filter=""){
+  const body = document.getElementById('tableBody');
+  const emptyBlock = document.getElementById('emptyBlock');
 
-    <!-- 25 / 75 split -->
-    <section class="split">
-      <!-- Left: Upcoming -->
-      <aside class="panel left-panel">
-        <header class="panel-head">
-          <h2>Next Upcoming Tasks</h2>
-          <p>Plan and prepare for what's ahead</p>
-        </header>
+  const q = filter.trim().toLowerCase();
 
-        <div class="calendar" id="calendar">
-          <div class="cal-head">
-            <button class="cal-nav" id="prevMonth" aria-label="Previous month">‹</button>
-            <p class="cal-title" id="calTitle">Month Year</p>
-            <button class="cal-nav" id="nextMonth" aria-label="Next month">›</button>
-          </div>
-          <div class="cal-weekdays">
-            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-          </div>
-          <div class="cal-days" id="calDays"></div>
-        </div>
+  const rows = completedTasks.filter(t =>
+    !q || t.name.toLowerCase().includes(q) || t.volunteer.toLowerCase().includes(q)
+  );
 
-        <div class="task-header">
-          <span class="task-title">Upcoming</span>
-          <span class="task-count" id="taskCount">0</span>
-        </div>
+  if(rows.length === 0){
+    body.innerHTML = "";
+    emptyBlock.hidden = false;
+    return;
+  }
 
-        <ul class="task-list" id="taskList"></ul>
-      </aside>
+  emptyBlock.hidden = true;
 
-      <!-- Right: Completed -->
-      <section class="panel right-panel">
-        <header class="panel-head row">
-          <div>
-            <h2>Completed Tasks</h2>
-            <p>Recent volunteer contributions</p>
-          </div>
-          <div class="search">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-            <input id="searchInput" type="search" placeholder="Search tasks or volunteers…" aria-label="Search completed tasks" />
-          </div>
-        </header>
+  body.innerHTML = rows.map(t=>`
+    <tr>
+      <td>${t.name}</td>
+      <td class="num">${t.hours}</td>
+      <td>${t.volunteer}</td>
+      <td>${t.completedOn}</td>
+      <td><span class="status-pill">Completed</span></td>
+    </tr>
+  `).join('');
+}
 
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Task Name</th>
-                <th class="num">Hours</th>
-                <th>Volunteer</th>
-                <th>Completed On</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-        
-          <div class="empty-block" id="emptyBlock" hidden>
-  <p class="empty" id="emptyState">No matching tasks found.</p>
-  <button class="find-tasks-btn" onclick="window.location.href='tasks.html'">
-    FIND NEW TASKS
-  </button>
-</div>
-        </div>
-      </section>
-    </section>
+document.getElementById('searchInput').addEventListener('input', e => renderTable(e.target.value));
 
-    <footer class="footer">© <span id="year"></span> Smart Resource Allocation · Crafted for impact.</footer>
-  </main>
+// ----------- SET KPI DATA -----------
+function setKPIData(data){
+  kpiData = data;
 
-  <script src="js/dashfinal.js"></script>
-</body>
-</html>
+  // HARD-CODED DASHBOARD VALUES (FOR NOW)
+  const hours = 2;
+  const pending = 3;
+  const active = 2;
+  const completed = 0;
+
+  document.getElementById("volunteerHours").textContent = hours;
+  document.getElementById("tasksPending").textContent = pending;
+  document.getElementById("tasksCompleted").textContent = completed;
+
+  // ⚠️ IMPORTANT: YOU DID NOT HAVE THIS ELEMENT BEFORE
+  const activeEl = document.getElementById("tasksActive");
+  if (activeEl) activeEl.textContent = active;
+
+  // Trends (optional)
+  document.getElementById("trendVolunteer").textContent = "Fixed demo data";
+  document.getElementById("trendPending").textContent = "3 pending tasks";
+  document.getElementById("trendCompleted").textContent = "0 completed";
+}
+// ----------- SET UPCOMING TASKS -----------
+function setUpcomingTasks(tasks){
+  upcomingTasks = tasks.map(t => ({
+    ...t,
+    date: new Date(t.date)
+  }));
+
+  renderCalendar();
+  renderUpcoming();
+}
+
+// ----------- SET COMPLETED TASKS -----------
+function setCompletedTasks(tasks){
+  completedTasks = tasks;
+  renderTable();
+}
+
+/* ---------- Init ---------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+renderCalendar();
+renderUpcoming();
+renderTable();
+loadVolunteerProfile();
+loadDashboard();
+
+async function loadDashboard() {
+
+    // ❌ STOP backend call completely for now
+    console.log("Using HARD-CODED DASHBOARD DATA");
+
+    setKPIData({
+        volunteerHours: 2,
+        tasksPending: 3,
+        tasksActive: 2,
+        tasksCompleted: 0
+    });
+
+    setUpcomingTasks([]);
+    setCompletedTasks([]);
+}
+
+async function loadVolunteerProfile() {
+  const token = localStorage.getItem("jwtToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/volunteer/profile`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch volunteer profile");
+    }
+
+    const volunteer = await response.json();
+
+    document.getElementById("volunteerName").textContent =
+      volunteer.name || "Volunteer";
+
+    document.getElementById("volunteerRole").textContent =
+      "Volunteer";
+
+    document.getElementById("volunteerAvatar").textContent =
+      (volunteer.name?.charAt(0) || "V").toUpperCase();
+
+  } catch (error) {
+    console.error("Profile Load Error:", error);
+  }
+}
+
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    localStorage.removeItem("jwtToken");
+
+    alert("Logged out successfully");
+
+    window.location.href = "index.html";
+});
+// setKPIData({
+//   volunteerHours: 100,
+//   tasksPending: 3,
+//   tasksCompleted: 10,
+//   trendVolunteer: "▲ 15% vs last month",
+//   trendPending: "Next due in 2 days",
+//   trendCompleted: "▲ 5 this month"
+// });
