@@ -1,0 +1,1 @@
+let API_BASE_URL = "https://sevasyncdeployment2-384749175333.asia-south1.run.app";
