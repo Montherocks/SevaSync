@@ -174,22 +174,45 @@ function showToast(msg, type = "success") {
 }
 
 // ---- VOLUNTEER ACTIONS ----
-function handleVolunteerAction(action, id) {
-  const idx = data.volunteers.findIndex(v => v.id === id);
-  if (idx === -1) return;
+async function handleVolunteerAction(action, id) {
+  const token = localStorage.getItem("jwtToken");
 
-  const v = data.volunteers[idx];
-  data.volunteers.splice(idx, 1);
-
-  updateCounts();
-  renderSection("volunteers");
-
-  showToast(
+  const endpoint =
     action === "approve"
-      ? `${v.userName} approved`
-      : `${v.userName} rejected`,
-    action === "approve" ? "success" : "error"
-  );
+      ? `http://localhost:8080/admin/registrations/approve?id=${id}`
+      : `http://localhost:8080/admin/registrations/reject?id=${id}`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) throw new Error("Action failed");
+
+    // ✅ Remove from UI only AFTER success
+    const idx = data.volunteers.findIndex(v => v.id === id);
+    if (idx !== -1) {
+      const v = data.volunteers[idx];
+      data.volunteers.splice(idx, 1);
+
+      updateCounts();
+      renderSection("volunteers");
+
+      showToast(
+        action === "approve"
+          ? `${v.userName} approved`
+          : `${v.userName} rejected`,
+        action === "approve" ? "success" : "error"
+      );
+    }
+
+  } catch (error) {
+    console.error(error);
+    showToast("Server error. Try again.", "error");
+  }
 }
 
 // ---- LOAD COUNTS ----
