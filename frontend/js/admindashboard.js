@@ -253,8 +253,10 @@ async function loadCompletedList() {
 async function loadVolunteers() {
   const token = localStorage.getItem("jwtToken");
 
-  const res = await fetch("http://localhost:8080/register/all", {
-    headers: { Authorization: `Bearer ${token}` }
+  const res = await fetch("http://localhost:8080/admin/registrations/pending", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   });
 
   data.volunteers = await res.json();
