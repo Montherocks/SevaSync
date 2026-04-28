@@ -160,7 +160,6 @@ document.getElementById('searchInput').addEventListener('input', e => renderTabl
 function setKPIData(data){
   kpiData = data;
 
-  // HARD-CODED DASHBOARD VALUES (FOR NOW)
   const hours = 2;
   const pending = 3;
   const active = 2;
@@ -206,7 +205,6 @@ loadDashboard();
 
 async function loadDashboard() {
 
-    // ❌ STOP backend call completely for now
     console.log("Using HARD-CODED DASHBOARD DATA");
 
     setKPIData({
