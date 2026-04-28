@@ -4,29 +4,38 @@ import java.util.List;
 
 public class DashboardResponseDTO {
 
-    private int volunteerHours;
+    private double volunteerHours;
     private int tasksPending;
+    private int tasksActive;
     private int tasksCompleted;
 
     private List<UpcomingTaskDTO> upcomingTasks;
     private List<CompletedTaskDTO> completedTasks;
 
-    public DashboardResponseDTO(int volunteerHours, int tasksPending, int tasksCompleted,
+    public DashboardResponseDTO(double volunteerHours,
+                                int tasksPending,
+                                int tasksActive,
+                                int tasksCompleted,
                                 List<UpcomingTaskDTO> upcomingTasks,
                                 List<CompletedTaskDTO> completedTasks) {
         this.volunteerHours = volunteerHours;
         this.tasksPending = tasksPending;
+        this.tasksActive = tasksActive;
         this.tasksCompleted = tasksCompleted;
         this.upcomingTasks = upcomingTasks;
         this.completedTasks = completedTasks;
     }
 
-    public int getVolunteerHours() {
+    public double getVolunteerHours() {
         return volunteerHours;
     }
 
     public int getTasksPending() {
         return tasksPending;
+    }
+
+    public int getTasksActive() {
+        return tasksActive;
     }
 
     public int getTasksCompleted() {

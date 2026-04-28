@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalTime;
 
 @Service
 public class DashboardService {
@@ -24,69 +25,90 @@ public class DashboardService {
     @Autowired
     private EventRepository eventRepository;
 
-    public DashboardResponseDTO getVolunteerDashboard(Long userId) {
+	public DashboardResponseDTO getVolunteerDashboard(Long userId) {
 
-        LocalDate today = LocalDate.now();
+    List<Registration> registrations =
+            registrationRepo.findByUserIdAndStatus(userId, RegistrationStatus.APPROVED);
 
-        // ONLY approved registrations
-        List<Registration> registrations =
-                registrationRepo.findByUserIdAndStatus(userId, RegistrationStatus.APPROVED);
+    double totalHours = 0;
+    int pendingTasks = 0;
+    int activeTasks = 0;
+    int completedTasks = 0;
 
-        int totalHours = 0;
-        int pendingTasks = 0;
-        int completedTasks = 0;
+    List<UpcomingTaskDTO> upcomingTasks = new ArrayList<>();
+    List<CompletedTaskDTO> completedTaskList = new ArrayList<>();
 
-        List<UpcomingTaskDTO> upcomingTasks = new ArrayList<>();
-        List<CompletedTaskDTO> completedTaskList = new ArrayList<>();
+    LocalDate today = LocalDate.now();
+    LocalTime now = LocalTime.now();
 
-        for (Registration reg : registrations) {
+    for (Registration reg : registrations) {
 
-            // fetch event using eventId (since your model stores IDs, not objects)
-            Event event = eventRepository.findById(reg.getEventId())
-                    .orElse(null);
+        Event event = eventRepository.findById(reg.getEventId())
+                .orElse(null);
 
-            if (event == null) continue;
+        if (event == null) continue;
 
-            LocalDate eventDate = event.getDate();
+        LocalDate eventDate = event.getDate();
+        LocalTime start = event.getStartTime();
+        LocalTime end = event.getEndTime();
 
-            // UPCOMING TASKS
-            if (eventDate.isAfter(today)) {
+        double duration = event.getDurationHours() != null ? event.getDurationHours() : 1;
 
-                pendingTasks++;
+        // =========================
+        // 🔵 ACTIVE TASKS
+        // =========================
+        if (eventDate.isEqual(today)
+                && start.isBefore(now)
+                && end.isAfter(now)) {
 
-                upcomingTasks.add(
-                        new UpcomingTaskDTO(
-                                event.getName(),
-                                event.getDescription(),
-                                event.getDate().toString(),
-                                event.getLocation()
-                        )
-                );
+            activeTasks++;
 
-            }
-            // COMPLETED TASKS
-            else {
-
-                completedTasks++;
-                totalHours += 1; // or event.getHours() if you later add it
-
-                completedTaskList.add(
-                        new CompletedTaskDTO(
-                                event.getName(),
-                                1,
-                                "Volunteer",
-                                event.getDate().toString()
-                        )
-                );
-            }
         }
 
-        return new DashboardResponseDTO(
-                totalHours,
-                pendingTasks,
-                completedTasks,
-                upcomingTasks,
-                completedTaskList
-        );
+        // =========================
+        // 🟡 PENDING TASKS
+        // =========================
+        else if (eventDate.isAfter(today)
+                || (eventDate.isEqual(today) && start.isAfter(now))) {
+
+            pendingTasks++;
+
+            upcomingTasks.add(
+                    new UpcomingTaskDTO(
+                            event.getName(),
+                            event.getDescription(),
+                            event.getDate().toString(),
+                            event.getLocation()
+                    )
+            );
+        }
+
+        // =========================
+        // 🔴 COMPLETED TASKS
+        // =========================
+        else {
+
+            completedTasks++;
+            totalHours += duration;
+
+            completedTaskList.add(
+                    new CompletedTaskDTO(
+                            event.getName(),
+                            duration,
+                            "Volunteer",
+                            event.getDate().toString()
+                    )
+            );
+        }
+    }
+
+    return new DashboardResponseDTO(
+        totalHours,
+        pendingTasks,
+        activeTasks,
+        completedTasks,
+        upcomingTasks,
+        completedTaskList
+    );
     }
 }

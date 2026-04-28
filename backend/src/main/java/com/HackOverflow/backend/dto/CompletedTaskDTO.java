@@ -3,11 +3,11 @@ package com.HackOverflow.backend.dto;
 public class CompletedTaskDTO {
 
     private String name;
-    private int hours;
+    private double hours;
     private String volunteer;
     private String completedOn;
 
-    public CompletedTaskDTO(String name, int hours, String volunteer, String completedOn) {
+    public CompletedTaskDTO(String name, double hours, String volunteer, String completedOn) {
         this.name = name;
         this.hours = hours;
         this.volunteer = volunteer;
@@ -18,7 +18,7 @@ public class CompletedTaskDTO {
         return name;
     }
 
-    public int getHours() {
+    public double getHours() {
         return hours;
     }
 
