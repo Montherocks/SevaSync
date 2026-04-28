@@ -101,7 +101,7 @@ async function registerTask(eventId, button) {
 
     try {
         const response = await fetch(
-            `${BASE_URL}/register?eventId=${eventId}`,
+            `${BASE_URL}/register/${eventId}`,
             {
                 method: "POST",
                 headers: {
