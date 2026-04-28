@@ -211,7 +211,7 @@ async function loadDashboard() {
 
     setKPIData({
         volunteerHours: 2,
-        tasksPending: 5s,
+        tasksPending: 5,
         tasksActive: 2,
         tasksCompleted: 0
     });
