@@ -1,6 +1,7 @@
 package com.HackOverflow.backend.controller;
 
 import com.HackOverflow.backend.dto.RegistrationAdminDTO;
+import com.HackOverflow.backend.model.Registration;
 import com.HackOverflow.backend.service.EventRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,4 +29,20 @@ public class AdminRegistrationController {
     public String reject(@RequestParam Long id) {
         return service.reject(id);
     }
+
+    @GetMapping("/active")
+    public List<RegistrationAdminDTO> getActiveTasks() {
+        return service.getActiveTasks();
+    }
+
+    @GetMapping("/pending")
+    public List<RegistrationAdminDTO> getPendingTasks() {
+        return service.getPendingTasks();
+    }
+
+    @GetMapping("/completed")
+    public List<RegistrationAdminDTO> getCompletedTasks() {
+        return service.getCompletedTasks();
+    }
 }
+
