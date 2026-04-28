@@ -25,15 +25,12 @@ public class Event {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
-<<<<<<< HEAD
-=======
 
     private String timeZone = "Asia/Kolkata";
 
     private Double durationHours;
 
     private String status; // PENDING, ACTIVE, COMPLETED
->>>>>>> 936fd9f78bf9441ed59c1c19b9e18bab88c9274a
 
     @ManyToOne
     @JsonIgnore
