@@ -1,17 +1,34 @@
 document.addEventListener("DOMContentLoaded", async function () {
 
     const tasksGrid = document.getElementById("tasksGrid");
-
     const BASE_URL = "http://localhost:8080";
 
-    try {
-        const response = await fetch(`${BASE_URL}/events/all`);
+    const token = localStorage.getItem("jwtToken");
 
-        if (!response.ok) {
+    try {
+        const [regResponse, eventResponse] = await Promise.all([
+            fetch(`${BASE_URL}/register/myRegistration`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }),
+            fetch(`${BASE_URL}/events/all`)
+        ]);
+
+        if (!eventResponse.ok) {
             throw new Error("Failed to fetch events");
         }
 
-        const events = await response.json();
+        const registrations = regResponse.ok ? await regResponse.json() : [];
+        const events = await eventResponse.json();
+
+        console.log("Registrations:", registrations);
+
+        const registeredEventIds = new Set(
+            registrations.map(r => r.eventId)
+        );
+
+        tasksGrid.innerHTML = "";
 
         events.forEach(event => {
 
@@ -22,6 +39,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             else if (event.category === "River Cleanup") imagePath = "images/rivercleanup.jpg";
             else if (event.category === "Food Distribution") imagePath = "images/fooddistribution.jpg";
             else if (event.category === "Clothes Distribution") imagePath = "images/clothesdistribution.jpg";
+
+            const isRegistered = registeredEventIds.has(event.id);
 
             const card = document.createElement("div");
             card.classList.add("task-card");
@@ -40,8 +59,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     <div class="task-details">
                         <span>${event.date}</span>
-                        
-                        <!-- FIXED TIME DISPLAY -->
+
                         <span>
                             ${event.startTime ? event.startTime.slice(0, 5) : "--"} 
                             - 
@@ -51,8 +69,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                         <span>${event.location}</span>
                     </div>
 
-                    <button onclick="registerTask(${event.id}, this)">
-                        Register
+                    <button 
+                        onclick="registerTask(${event.id}, this)"
+                        ${isRegistered ? "disabled" : ""}
+                    >
+                        ${isRegistered ? "Registered ✔" : "Register"}
                     </button>
 
                 </div>
@@ -62,7 +83,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        alert("Failed to load events");
     }
 });
 
@@ -74,19 +96,16 @@ async function registerTask(eventId, button) {
     button.innerText = "Registering...";
     button.disabled = true;
 
-    const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("jwtToken");
-
     const BASE_URL = "http://localhost:8080";
 
     try {
         const response = await fetch(
-            `${BASE_URL}/register/${eventId}`,
+            `${BASE_URL}/register?eventId=${eventId}`,
             {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
+                    "Authorization": `Bearer ${token}`
                 }
             }
         );
