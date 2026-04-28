@@ -13,34 +13,36 @@
 <body>
   <!-- Header -->
   <header class="header">
-    <div class="container header-inner header-flex">
+  <div class="container header-inner header-flex">
 
-      <!-- LEFT: Admin ID -->
-      <div class="header-left">
-        <div class="admin-info">
-          <i class="fa-solid fa-user"></i>
-            <span id="admin-id">Admin ID: --</span>
+    <!-- CENTER: Title -->
+    <div class="header-center">
+      <h1>Admin Panel</h1>
+      <p>Manage tasks, track progress, and approve volunteers</p>
+    </div>
+
+    <!-- RIGHT: Actions + Profile -->
+    <div class="header-right">
+      <button class="create-btn" id="createEventBtn">
+        <i class="fa-solid fa-plus"></i> Create Event
+      </button>
+
+      <button class="logout-btn" id="logoutBtn">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </button>
+
+      <!-- Dynamic Admin Profile -->
+      <div class="profile-chip">
+        <div class="avatar" id="adminAvatar">A</div>
+        <div class="profile-meta">
+          <p class="profile-name" id="adminName">Admin Name</p>
+          <p class="profile-role">Admin</p>
         </div>
       </div>
-
-      <!-- CENTER: Title -->
-      <div class="header-center">
-        <h1>Admin Panel</h1>
-        <p>Manage tasks, track progress, and approve volunteers</p>
-      </div>
-
-      <!-- RIGHT: Button -->
-      <div class="header-right">
-        <button class="create-btn" id="createEventBtn">
-          <i class="fa-solid fa-plus"></i> Create Event
-        </button>
-        <button class="logout-btn" id="logoutBtn">
-           <i class="fa-solid fa-right-from-bracket"></i> Logout
-        </button>
-      </div>
-
     </div>
-  </header>
+
+  </div>
+</header>
 
   <main class="container main">
     <!-- Dashboard Cards -->

@@ -1,5 +1,5 @@
 /* ===========================
-   Design tokens
+   Design Tokens
    =========================== */
 :root {
   --teal: #14b8a6;
@@ -22,34 +22,39 @@
   --gradient-card-hover: linear-gradient(135deg, var(--cyan) 0%, var(--teal) 100%);
   --gradient-soft: linear-gradient(135deg, rgba(20,184,166,0.08), rgba(29,78,216,0.08));
 
-  --shadow-soft: 0 10px 30px -10px rgba(29, 78, 216, 0.25);
-  --shadow-glow: 0 20px 45px -15px rgba(6, 182, 212, 0.55);
+  --shadow-soft: 0 10px 30px -10px rgba(29, 78, 216, 0.22);
+  --shadow-glow: 0 20px 45px -15px rgba(6, 182, 212, 0.45);
 
-  --radius: 16px;
+  --radius: 18px;
   --transition: 0.3s ease;
 }
 
 /* ===========================
    Base
    =========================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html, body { height: 100%; }
+html, body {
+  min-height: 100%;
+}
 
 body {
-  font-family: 'Inter', 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', 'Poppins', 'Segoe UI', sans-serif;
   background: var(--gradient-soft), var(--bg);
   color: var(--text);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
 }
 
 /* ===========================
@@ -57,27 +62,124 @@ body {
    =========================== */
 .header {
   background: var(--gradient-brand);
-  color: #fff;
+  color: white;
   box-shadow: var(--shadow-soft);
 }
+
 .header-inner {
-  text-align: center;
-  padding: 3rem 1.25rem 4rem;
+  padding: 1.5rem 0 3.5rem;
 }
-.header h1 {
-  font-family: 'Poppins', 'Inter', sans-serif;
-  font-size: clamp(2rem, 4vw, 2.75rem);
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.header-center {
+  flex: 1;
+}
+
+.header-center h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
-.header p {
-  margin-top: 0.5rem;
-  opacity: 0.9;
+
+.header-center p {
+  margin-top: 0.35rem;
   font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
 }
 
 /* ===========================
-   Main
+   Buttons
+   =========================== */
+.create-btn,
+.logout-btn {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.75rem 1.15rem;
+  border-radius: 12px;
+  transition: all var(--transition);
+}
+
+.create-btn {
+  background: white;
+  color: var(--deep-blue);
+}
+
+.create-btn:hover {
+  background: #dbeafe;
+  transform: translateY(-2px);
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.18);
+  color: white;
+  backdrop-filter: blur(8px);
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.28);
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   Profile Chip
+   =========================== */
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(10px);
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.22);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.profile-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.profile-role {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+/* ===========================
+   Main Layout
    =========================== */
 .main {
   margin-top: -2rem;
@@ -85,7 +187,7 @@ body {
 }
 
 /* ===========================
-   Cards grid
+   Dashboard Cards
    =========================== */
 .cards {
   display: grid;
@@ -94,24 +196,23 @@ body {
 }
 
 .card {
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
   border: none;
-  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  color: white;
   background: var(--gradient-card);
   border-radius: var(--radius);
   padding: 1.5rem;
   box-shadow: var(--shadow-soft);
-  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
-  position: relative;
-  overflow: hidden;
+  transition: all var(--transition);
 }
+
 .card:hover {
-  transform: translateY(-4px) scale(1.03);
+  transform: translateY(-5px) scale(1.02);
   background: var(--gradient-card-hover);
   box-shadow: var(--shadow-glow);
 }
+
 .card.active {
   outline: 3px solid var(--cyan);
   outline-offset: 3px;
@@ -119,76 +220,80 @@ body {
 
 .card-top {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  align-items: flex-start;
 }
+
 .card-label {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.92;
+  opacity: 0.9;
 }
+
 .card-count {
-  margin-top: 0.6rem;
-  font-size: 2.25rem;
+  margin-top: 0.65rem;
+  font-size: 2.3rem;
   font-weight: 700;
   line-height: 1;
 }
+
 .card-icon {
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(6px);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.18);
   font-size: 1.15rem;
-  transition: transform var(--transition);
 }
-.card:hover .card-icon { transform: rotate(8deg) scale(1.05); }
+
 .card-foot {
   margin-top: 1rem;
-  font-size: 0.75rem;
-  opacity: 0.85;
+  font-size: 0.8rem;
+  opacity: 0.88;
 }
 
 /* ===========================
-   Detail panel
+   Detail Panel
    =========================== */
 .panel {
   margin-top: 2.5rem;
   background: var(--card-bg);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
-  animation: fadeIn 0.4s ease;
 }
+
 .panel-head {
-  padding: 1.25rem 1.5rem;
+  padding: 1.4rem 1.6rem;
   border-bottom: 1px solid var(--border);
   background: var(--gradient-soft);
 }
+
 .panel-head h2 {
-  font-family: 'Poppins', 'Inter', sans-serif;
-  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.55rem;
   font-weight: 600;
   background: var(--gradient-card);
   -webkit-background-clip: text;
-  background-clip: text;
   color: transparent;
 }
+
 .panel-head p {
   margin-top: 0.25rem;
-  font-size: 0.875rem;
   color: var(--muted);
+  font-size: 0.9rem;
 }
-.panel-body { padding: 1.5rem; }
+
+.panel-body {
+  padding: 1.5rem;
+}
 
 /* ===========================
-   Lists
+   Task List
    =========================== */
 .task-list {
   list-style: none;
@@ -196,119 +301,123 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
+
 .task-item {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.9rem;
   padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background: #fafdff;
-  transition: transform var(--transition), box-shadow var(--transition);
-  animation: fadeIn 0.3s ease;
+  transition: all var(--transition);
 }
+
 .task-item:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft);
 }
+
 .task-icon {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--gradient-card);
-  color: #fff;
-}
-.task-text { min-width: 0; }
-.task-title {
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.task-meta {
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin-top: 0.15rem;
+  color: white;
+  flex-shrink: 0;
 }
 
-/* Volunteers */
+.task-title {
+  font-weight: 600;
+}
+
+.task-meta {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ===========================
+   Volunteer List
+   =========================== */
 .volunteer-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
+
 .volunteer-item {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
   padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   background: #fafdff;
-  transition: box-shadow var(--transition);
-  animation: fadeIn 0.3s ease;
 }
-.volunteer-item:hover { box-shadow: var(--shadow-soft); }
+
 .volunteer-info {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  min-width: 0;
-  flex: 1 1 220px;
+  gap: 0.9rem;
 }
-.avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--gradient-card);
-  color: #fff;
+
+.volunteer-name {
   font-weight: 600;
-  font-size: 0.9rem;
-  flex-shrink: 0;
 }
-.volunteer-name { font-weight: 600; }
+
 .volunteer-task {
   font-size: 0.8rem;
   color: var(--muted);
-  margin-top: 0.15rem;
 }
+
 .volunteer-actions {
   display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
+  gap: 0.6rem;
 }
 
-/* Buttons */
+/* ===========================
+   Action Buttons
+   =========================== */
 .btn {
-  font: inherit;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
-  box-shadow: var(--shadow-soft);
-  transition: background var(--transition), transform var(--transition);
+  color: white;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  transition: all var(--transition);
 }
-.btn:hover { transform: translateY(-1px); }
-.btn-approve { background: var(--approve); }
-.btn-approve:hover { background: var(--approve-hover); }
-.btn-reject { background: var(--reject); }
-.btn-reject:hover { background: var(--reject-hover); }
 
-/* Empty state */
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-approve {
+  background: var(--approve);
+}
+
+.btn-approve:hover {
+  background: var(--approve-hover);
+}
+
+.btn-reject {
+  background: var(--reject);
+}
+
+.btn-reject:hover {
+  background: var(--reject-hover);
+}
+
+/* ===========================
+   Empty State
+   =========================== */
 .empty {
   display: flex;
   flex-direction: column;
@@ -318,6 +427,7 @@ body {
   text-align: center;
   color: var(--muted);
 }
+
 .empty-icon {
   width: 64px;
   height: 64px;
@@ -325,115 +435,87 @@ body {
   place-items: center;
   border-radius: 50%;
   background: var(--gradient-soft);
+  margin-bottom: 0.8rem;
   color: var(--deep-blue);
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
+  font-size: 1.4rem;
 }
 
-/* Toast */
+/* ===========================
+   Toast
+   =========================== */
 .toast-container {
   position: fixed;
-  bottom: 1.25rem;
   right: 1.25rem;
+  bottom: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  z-index: 50;
+  gap: 0.6rem;
+  z-index: 100;
 }
+
 .toast {
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 0.875rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.88rem;
   box-shadow: var(--shadow-soft);
   animation: slideIn 0.25s ease;
-  max-width: 320px;
 }
-.toast.success { background: var(--approve); }
-.toast.error   { background: var(--reject); }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+.toast.success {
+  background: var(--approve);
 }
+
+.toast.error {
+  background: var(--reject);
+}
+
+/* ===========================
+   Animations
+   =========================== */
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* ===========================
    Responsive
    =========================== */
-@media (max-width: 1024px) {
-  .cards { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 640px) {
-  .cards { grid-template-columns: 1fr; }
-  .task-list { grid-template-columns: 1fr; }
-  .header-inner { padding: 2.25rem 1rem 3rem; }
-  .panel-body { padding: 1rem; }
-  .volunteer-actions { width: 100%; }
-  .volunteer-actions .btn { flex: 1; justify-content: center; }
+@media (max-width: 1100px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .task-list {
+    grid-template-columns: 1fr;
+  }
 }
 
+@media (max-width: 768px) {
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
+  .header-right {
+    width: 100%;
+  }
 
-/* Header Flex Layout */
-.header-flex {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
+  .cards {
+    grid-template-columns: 1fr;
+  }
 
-/* Right section */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+  .volunteer-actions {
+    width: 100%;
+  }
 
-/* Admin ID */
-.admin-info {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(255,255,255,0.15);
-  padding: 0.5rem 0.9rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-}
-
-/* Create Event Button */
-.create-btn {
-  background: #ffffff;
-  color: var(--deep-blue);
-  font-weight: 600;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.create-btn:hover {
-  background: #e0f2fe;
-  transform: translateY(-2px);
-}
-.logout-btn {
-  background: #1e66ff;
-  color: white;
-  font-weight: 700;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  margin-left: 10px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.logout-btn:hover {
-  background: #0047d6;
-  transform: translateY(-1px);
+  .volunteer-actions .btn {
+    flex: 1;
+  }
 }

@@ -147,26 +147,40 @@ function handleVolunteerAction(action, id) {
 }
 
 async function loadAdminDetails() {
+  const token = localStorage.getItem("jwtToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
   try {
-    const res = await fetch("/api/admin/profile", {
+    const res = await fetch("http://localhost:8080/admin/profile", {
       method: "GET",
-      credentials: "include" // important if using session/cookies
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     });
 
-    if (!res.ok) throw new Error("Failed to fetch admin data");
+    if (!res.ok) {
+      throw new Error("Failed to fetch admin data");
+    }
 
     const admin = await res.json();
 
-    document.getElementById("admin-id").textContent =
-      "Admin ID: " + admin.id;
+    document.getElementById("adminName").textContent =
+      admin.name || "Admin";
+
+    document.getElementById("adminAvatar").textContent =
+      (admin.name?.charAt(0) || "A").toUpperCase();
 
   } catch (err) {
-    console.error(err);
-    document.getElementById("admin-id").textContent =
-      "Admin ID: Not available";
+    console.error("Admin Profile Error:", err);
+
+    document.getElementById("adminName").textContent =
+      "Admin";
   }
 }
-
 // ---- Event wiring ----
 function init() {
   // Create Event Button Click

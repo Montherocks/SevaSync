@@ -1,6 +1,5 @@
-
 async function loginUser(payload) {
-    const response = await fetch("http://localhost:5501/auth/login", {
+    const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -8,7 +7,19 @@ async function loginUser(payload) {
         body: JSON.stringify(payload)
     });
 
-    return await response.json();
+    let data = {};
+
+    try {
+        data = await response.json();
+    } catch (error) {
+        data = {};
+    }
+
+    if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+    }
+
+    return data;
 }
 
 async function handleLogin() {
@@ -17,10 +28,12 @@ async function handleLogin() {
         password: document.getElementById("loginPassword").value
     };
 
-    const response = await loginUser(payload);
+    try {
+        const response = await loginUser(payload);
 
-    if (response.jwtToken) {
-        localStorage.setItem("jwtToken", response.jwtToken);
+        console.log("Login Response:", response);
+
+        localStorage.setItem("jwtToken", response.token || response.jwtToken);
         localStorage.setItem("role", response.role);
 
         if (response.role === "VOLUNTEER") {
@@ -28,10 +41,14 @@ async function handleLogin() {
         } 
         else if (response.role === "ADMIN") {
             window.location.href = "admindashboard.html";
+        } 
+        else {
+            alert("Role not recognized");
         }
-    } 
-    else {
-        alert(response.message || "Login failed");
+
+    } catch (error) {
+        console.error("Login Error:", error);
+        alert(error.message);
     }
 }
 

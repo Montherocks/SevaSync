@@ -36,10 +36,13 @@ public class SecurityConfig {
                         .requestMatchers("/auth/signup", "/auth/login").permitAll()
                         .requestMatchers("/auth/registeradmin").hasRole("ADMIN")
                         .requestMatchers("/auth/registervolunteer").hasRole("VOLUNTEER")
+                        .requestMatchers("/volunteer/**").hasRole("VOLUNTEER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/events/create").hasRole("ADMIN")
                         .requestMatchers("/events/update/**").hasRole("ADMIN")
                         .requestMatchers("/events/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/events/all").permitAll()
+                        .requestMatchers("/register/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -51,8 +54,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "http://127.0.0.1:5501",
+                "http://localhost:5501"
+        ));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 

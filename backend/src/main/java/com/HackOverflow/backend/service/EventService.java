@@ -46,8 +46,8 @@ public class EventService {
         event.setCategory(dto.getCategory());
         event.setLocation(dto.getLocation());
         event.setDate(dto.getDate());
-        event.setTime(dto.getTime());
-
+        event.setStartTime(dto.getStartTime());
+        event.setEndTime(dto.getEndTime());
         event.setAdmin(admin);
 
         return eventRepository.save(event);
@@ -71,8 +71,8 @@ public class EventService {
         event.setCategory(dto.getCategory());
         event.setLocation(dto.getLocation());
         event.setDate(dto.getDate());
-        event.setTime(dto.getTime());
-
+        event.setStartTime(dto.getStartTime());
+        event.setEndTime(dto.getEndTime());
         return eventRepository.save(event);
     }
 
@@ -88,4 +88,18 @@ public class EventService {
         eventRepository.delete(event);
         return "Event Deleted Successfully";
     }
+    // public List<Event> getPendingEvents(String email) {
+
+    // Users user = userRepository.findByEmail(email)
+    //         .orElseThrow(() -> new RuntimeException("User not found"));
+
+    // if (user.getRoleType() != RoleType.ADMIN) {
+    //     throw new RuntimeException("Unauthorized");
+    // }
+
+    // AdminProfile admin = adminRepository.findByUser(user)
+    //         .orElseThrow(() -> new RuntimeException("Admin Profile Not Found"));
+
+    // return eventRepository.findByAdminAndStatus(admin, "PENDING");
+    // }
 }
