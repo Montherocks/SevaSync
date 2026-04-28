@@ -1,18 +1,18 @@
 document.addEventListener("DOMContentLoaded", async function () {
 
     const tasksGrid = document.getElementById("tasksGrid");
-    const BASE_URL = "http://localhost:8080";
+    //const BASE_URL = "${API_BASE_URL}";
 
     const token = localStorage.getItem("jwtToken");
 
     try {
         const [regResponse, eventResponse] = await Promise.all([
-            fetch(`${BASE_URL}/register/myRegistration`, {
+            fetch(`${API_BASE_URL}/register/myRegistration`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             }),
-            fetch(`${BASE_URL}/events/all`)
+            fetch(`${API_BASE_URL}/events/all`)
         ]);
 
         if (!eventResponse.ok) {
@@ -119,11 +119,11 @@ async function registerTask(eventId, button) {
     button.disabled = true;
 
     const token = localStorage.getItem("jwtToken");
-    const BASE_URL = "http://localhost:8080";
+    //const BASE_URL = "${API_BASE_URL}";
 
     try {
         const response = await fetch(
-            `${BASE_URL}/register/${eventId}`,
+            `${API_BASE_URL}/register/${eventId}`,
             {
                 method: "POST",
                 headers: {
@@ -148,7 +148,7 @@ async function registerTask(eventId, button) {
 //ai button
 async function checkAI(eventId, button) {
 
-    const BASE_URL = "http://localhost:8080";
+    //const BASE_URL = "${API_BASE_URL}";
     const token = localStorage.getItem("jwtToken");
 
     const resultBox = document.getElementById(`ai-${eventId}`);
@@ -164,7 +164,7 @@ async function checkAI(eventId, button) {
     button.disabled = true;
 
     try {
-        const res = await fetch(`${BASE_URL}/ai/check/${eventId}`, {
+        const res = await fetch(`${API_BASE_URL}/ai/check/${eventId}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

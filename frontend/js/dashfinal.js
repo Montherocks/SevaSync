@@ -9,9 +9,9 @@ const addDays = (n) => {
 let upcomingTasks = [];
 let completedTasks = [];
 let kpiData = {
-  volunteerHours: 0,
-  tasksPending: 0,
-  tasksCompleted: 0
+  volunteerHours: 3,
+  tasksPending: 2,
+  tasksCompleted: 3
 };
 
 /* ---------- Count-up KPI animation ---------- */
@@ -161,8 +161,8 @@ function setKPIData(data){
   kpiData = data;
 
   // Main values
-  document.getElementById("volunteerHours").textContent = data.volunteerHours || 0;
-  document.getElementById("tasksPending").textContent = data.tasksPending || 0;
+  document.getElementById("volunteerHours").textContent = data.volunteerHours || 2;
+  document.getElementById("tasksPending").textContent = data.tasksPending || 3;
   document.getElementById("tasksCompleted").textContent = data.tasksCompleted || 0;
 
   // Trends (IMPORTANT)
@@ -204,7 +204,7 @@ async function loadVolunteerProfile() {
   }
 
   try {
-    const response = await fetch("http://localhost:8080/volunteer/profile", {
+    const response = await fetch(`${API_BASE_URL}/volunteer/profile`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`

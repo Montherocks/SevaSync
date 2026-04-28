@@ -179,8 +179,8 @@ async function handleVolunteerAction(action, id) {
 
   const endpoint =
     action === "approve"
-      ? `http://localhost:8080/admin/registrations/approve?id=${id}`
-      : `http://localhost:8080/admin/registrations/reject?id=${id}`;
+      ? `${API_BASE_URL}/admin/registrations/approve?id=${id}`
+      : `${API_BASE_URL}/admin/registrations/reject?id=${id}`;
 
   try {
     const res = await fetch(endpoint, {
@@ -221,9 +221,9 @@ async function loadCounts() {
   const headers = { Authorization: `Bearer ${token}` };
 
   const [a, p, c] = await Promise.all([
-    fetch("http://localhost:8080/admin/tasks/active/count", { headers }),
-    fetch("http://localhost:8080/admin/tasks/pending/count", { headers }),
-    fetch("http://localhost:8080/admin/tasks/completed/count", { headers })
+    fetch(`${API_BASE_URL}/admin/tasks/active/count`, { headers }),
+    fetch(`${API_BASE_URL}/admin/tasks/pending/count`, { headers }),
+    fetch(`${API_BASE_URL}/admin/tasks/completed/count`, { headers })
   ]);
 
   const activeJson = await a.json();
@@ -242,7 +242,7 @@ async function loadCounts() {
 async function loadCompletedList() {
   const token = localStorage.getItem("jwtToken");
 
-  const res = await fetch("http://localhost:8080/admin/tasks/completed", {
+  const res = await fetch(`${API_BASE_URL}/admin/tasks/completed`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
@@ -253,7 +253,7 @@ async function loadCompletedList() {
 async function loadVolunteers() {
   const token = localStorage.getItem("jwtToken");
 
-  const res = await fetch("http://localhost:8080/admin/registrations/pending", {
+  const res = await fetch(`${API_BASE_URL}/admin/registrations/pending`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -267,7 +267,7 @@ async function loadVolunteers() {
 async function loadAdminDetails() {
   const token = localStorage.getItem("jwtToken");
 
-  const res = await fetch("http://localhost:8080/admin/profile", {
+  const res = await fetch(`${API_BASE_URL}/admin/profile`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 

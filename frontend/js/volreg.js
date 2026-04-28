@@ -3,7 +3,7 @@ async function registerVolunteerDetails(payload) {
 
     console.log("Stored Token:", token);
 
-    const response = await fetch("http://localhost:8080/auth/registervolunteer", {
+    const response = await fetch(`${API_BASE_URL}/auth/registervolunteer`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

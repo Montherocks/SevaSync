@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/events/create", {
+            const response = await fetch(`${API_BASE_URL}/events/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
