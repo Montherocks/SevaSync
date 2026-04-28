@@ -1,6 +1,6 @@
 
 async function registerUser(payload) {
-    const response = await fetch("http://localhost:5501/auth/signup", {
+    const response = await fetch("http://localhost:8080/auth/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -30,15 +30,16 @@ async function handleGetStarted() {
         name: document.getElementById("name").value,
         password: document.getElementById("password").value,
         role: role.toUpperCase(),
-        emailaddress: document.getElementById("email").value
+        email: document.getElementById("email").value
     };
 
     try {
         const response = await registerUser(payload);
 
-        localStorage.setItem("jwtToken", response.jwtToken);
-        localStorage.setItem("role", response.role);
+        console.log("Signup Response:", response);
 
+        localStorage.setItem("jwtToken", response.token || response.jwtToken);
+        localStorage.setItem("role", response.role);
         if (role === "volunteer") {
             window.location.href = "volreg.html";
         } 

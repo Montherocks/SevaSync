@@ -48,6 +48,17 @@ public class EventService {
         event.setDate(dto.getDate());
         event.setStartTime(dto.getStartTime());
         event.setEndTime(dto.getEndTime());
+<<<<<<< HEAD
+=======
+
+        if (dto.getStartTime() != null && dto.getEndTime() != null) {
+             long hours = java.time.Duration.between(dto.getStartTime(), dto.getEndTime()).toHours();
+            event.setDurationHours((double) hours);
+        }
+        event.setTimeZone("Asia/Kolkata");
+        event.setStatus("PENDING");
+
+>>>>>>> 936fd9f78bf9441ed59c1c19b9e18bab88c9274a
         event.setAdmin(admin);
 
         return eventRepository.save(event);
@@ -73,6 +84,14 @@ public class EventService {
         event.setDate(dto.getDate());
         event.setStartTime(dto.getStartTime());
         event.setEndTime(dto.getEndTime());
+<<<<<<< HEAD
+=======
+        if (dto.getStartTime() != null && dto.getEndTime() != null) {
+    long hours = java.time.Duration.between(dto.getStartTime(), dto.getEndTime()).toHours();
+    event.setDurationHours((double) hours);
+}
+        event.setTimeZone("Asia/Kolkata");
+>>>>>>> 936fd9f78bf9441ed59c1c19b9e18bab88c9274a
 
         return eventRepository.save(event);
     }
@@ -89,4 +108,18 @@ public class EventService {
         eventRepository.delete(event);
         return "Event Deleted Successfully";
     }
+    // public List<Event> getPendingEvents(String email) {
+
+    // Users user = userRepository.findByEmail(email)
+    //         .orElseThrow(() -> new RuntimeException("User not found"));
+
+    // if (user.getRoleType() != RoleType.ADMIN) {
+    //     throw new RuntimeException("Unauthorized");
+    // }
+
+    // AdminProfile admin = adminRepository.findByUser(user)
+    //         .orElseThrow(() -> new RuntimeException("Admin Profile Not Found"));
+
+    // return eventRepository.findByAdminAndStatus(admin, "PENDING");
+    // }
 }

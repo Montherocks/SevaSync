@@ -127,12 +127,22 @@ function renderUpcoming(){
 /* ---------- Completed table ---------- */
 function renderTable(filter=""){
   const body = document.getElementById('tableBody');
-  const empty = document.getElementById('emptyState');
+  const emptyBlock = document.getElementById('emptyBlock');
+
   const q = filter.trim().toLowerCase();
+
   const rows = completedTasks.filter(t =>
     !q || t.name.toLowerCase().includes(q) || t.volunteer.toLowerCase().includes(q)
   );
-  empty.hidden = rows.length !== 0;
+
+  if(rows.length === 0){
+    body.innerHTML = "";
+    emptyBlock.hidden = false;
+    return;
+  }
+
+  emptyBlock.hidden = true;
+
   body.innerHTML = rows.map(t=>`
     <tr>
       <td>${t.name}</td>
@@ -183,7 +193,51 @@ document.getElementById('year').textContent = new Date().getFullYear();
 renderCalendar();
 renderUpcoming();
 renderTable();
+loadVolunteerProfile();
 
+async function loadVolunteerProfile() {
+  const token = localStorage.getItem("jwtToken");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/volunteer/profile", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch volunteer profile");
+    }
+
+    const volunteer = await response.json();
+
+    document.getElementById("volunteerName").textContent =
+      volunteer.name || "Volunteer";
+
+    document.getElementById("volunteerRole").textContent =
+      "Volunteer";
+
+    document.getElementById("volunteerAvatar").textContent =
+      (volunteer.name?.charAt(0) || "V").toUpperCase();
+
+  } catch (error) {
+    console.error("Profile Load Error:", error);
+  }
+}
+
+document.getElementById("logoutBtn").addEventListener("click", function () {
+    localStorage.removeItem("jwtToken");
+
+    alert("Logged out successfully");
+
+    window.location.href = "index.html";
+});
 // setKPIData({
 //   volunteerHours: 100,
 //   tasksPending: 3,

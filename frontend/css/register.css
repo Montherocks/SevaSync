@@ -1,159 +1,289 @@
+/* =========================
+FILE: register.css
+SevaSync Unified Theme
+========================= */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+:root{
+  --teal:#10b8a6;
+  --cyan:#22b8e6;
+  --blue:#1f6fd4;
+  --deep-blue:#143a82;
+
+  --bg:#f4fafd;
+  --surface:#ffffff;
+  --text:#13243d;
+  --muted:#5b6b82;
+  --border:#dbe7ef;
+
+  --grad-brand: linear-gradient(135deg,var(--teal) 0%, var(--cyan) 50%, var(--deep-blue) 100%);
+  --grad-header: linear-gradient(90deg,var(--teal) 0%, var(--cyan) 50%, var(--blue) 100%);
+  --grad-app: linear-gradient(180deg,#eef8fb 0%, #e7f1f8 100%);
+
+  --shadow-soft: 0 4px 20px -4px rgba(15,90,140,.08);
+  --shadow-card: 0 10px 30px -10px rgba(15,90,140,.25);
+
+  --radius:16px;
+  --t:.3s cubic-bezier(.4,0,.2,1);
 }
 
-body {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #d9e9ff, #b7d3ff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+/* ---------- Reset ---------- */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-/* BACK BUTTON */
-.back-arrow {
-  position: absolute;
-  top: 25px;
-  left: 25px;
-  font-size: 2rem;
-  text-decoration: none;
-  color: #2f5fb3;
-  font-weight: bold;
+body{
+    font-family:'Inter','Segoe UI',system-ui,sans-serif;
+    background: var(--grad-app);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
 }
 
-/* MAIN CARD */
-.auth-container {
-  width: 900px;
-  max-width: 95%;
-  min-height: 550px;
-  display: flex;
-  border-radius: 18px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+/* ---------- Back Arrow ---------- */
+.back-arrow{
+    position:absolute;
+    top:28px;
+    left:28px;
+    font-size:2rem;
+    text-decoration:none;
+    color:var(--deep-blue);
+    font-weight:700;
+    transition:var(--t);
 }
 
-
-/* LEFT IMAGE PANEL */
-.left-panel {
-  flex: 1;
-  background: linear-gradient(135deg, #7aa8ff, #9cbcff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px; 
+.back-arrow:hover{
+    transform:translateX(-4px);
 }
 
-/* IMAGE FRAME */
-.left-panel .image-frame {
-  width: 100%;
-  height: 100%;
-  border-radius: 18px;
-  overflow: hidden;
-  background: rgba(255,255,255,0.25);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ---------- Main Auth Container ---------- */
+.auth-container{
+    width:100%;
+    max-width:1280px;
+    min-height:760px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:24px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    overflow:hidden;
+    box-shadow: var(--shadow-card);
 }
 
-/* IMAGE FIT */
-.left-panel img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; 
-  border-radius: 18px;
+/* ---------- Left Panel ---------- */
+.left-panel{
+    background: var(--grad-header);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+    position:relative;
 }
 
-
-/* RIGHT FORM PANEL */
-.right-panel {
-  flex: 1;
-  background: #f7fbff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 65px 55px;
+.left-panel::before{
+    content:"";
+    position:absolute;
+    width:280px;
+    height:280px;
+    border-radius:50%;
+    background:rgba(255,255,255,.14);
+    top:-60px;
+    right:-60px;
+    filter:blur(20px);
 }
 
-/* FORM LAYOUT */
-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 28px; 
+.left-panel::after{
+    content:"";
+    position:absolute;
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+    bottom:-60px;
+    left:-60px;
+    filter:blur(18px);
 }
 
-/* FORM HEADING */
-.form-heading {
-  font-size: 2rem;
-  color: #2f5fb3;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 10px;
+/* ---------- Image Frame ---------- */
+.image-frame{
+    width:100%;
+    max-width:500px;
+    aspect-ratio:4/5;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:22px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    backdrop-filter:blur(8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    z-index:2;
 }
 
-/* INPUTS */
+.image-frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* ---------- Right Panel ---------- */
+.right-panel{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:60px;
+    background:linear-gradient(180deg,#ffffff 0%, #f7fbfd 100%);
+}
+
+/* ---------- Form ---------- */
+form{
+    width:100%;
+    max-width:460px;
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+}
+
+/* ---------- Heading ---------- */
+.form-heading{
+    font-family:'Poppins','Inter',sans-serif;
+    font-size:3rem;
+    font-weight:800;
+    text-align:center;
+    background: var(--grad-header);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:10px;
+    letter-spacing:-.02em;
+}
+
+/* ---------- Inputs ---------- */
 input,
-select {
-  width: 100%;
-  padding: 16px 18px; 
-  border: 1px solid #c7d8f5;
-  border-radius: 25px;
-  outline: none;
-  font-size: 1rem;
-  background: white;
+select,
+textarea{
+    width:100%;
+    padding:18px 20px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    font-size:1rem;
+    font-family:inherit;
+    background:#f7fbfd;
+    color:var(--text);
+    outline:none;
+    transition:var(--t);
 }
 
-/* DATE LABEL */
-.date-label {
-  color: #2f5fb3;
-  font-size: 0.95rem;
-  margin-bottom: -12px;
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--cyan);
+    box-shadow:0 0 0 4px rgba(34,184,230,.12);
+    background:#fff;
 }
 
-/* DATE RANGE */
-.date-range {
-  display: flex;
-  gap: 18px; 
+input::placeholder,
+textarea::placeholder{
+    color:var(--muted);
 }
 
-/* BUTTON */
-button {
-  margin-top: 8px;
-  padding: 16px;
-  border: none;
-  border-radius: 25px;
-  background: #2f5fb3;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  background: #244a8f;
+/* ---------- Date Label ---------- */
+.date-label{
+    font-size:.95rem;
+    font-weight:700;
+    color:var(--deep-blue);
+    margin-bottom:-8px;
 }
 
-/* RESPONSIVE */
-@media(max-width: 768px) {
-  .auth-container {
-    flex-direction: column;
-    min-height: auto;
-  }
+/* ---------- Date Range ---------- */
+.date-range{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
 
-  .left-panel {
-    height: 250px;
-  }
+/* ---------- Button ---------- */
+button{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:14px;
+    background: var(--grad-header);
+    color:white;
+    font-size:1.1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:var(--t);
+    box-shadow: var(--shadow-soft);
+}
 
-  .right-panel {
-    padding: 30px;
-  }
+button:hover{
+    transform:translateY(-2px);
+}
 
-  .date-range {
-    flex-direction: column;
-  }
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px){
+    .auth-container{
+        grid-template-columns:1fr;
+        max-width:720px;
+    }
+
+    .left-panel{
+        min-height:380px;
+    }
+
+    .image-frame{
+        max-width:360px;
+        aspect-ratio:16/10;
+    }
+}
+
+@media (max-width: 768px){
+    body{
+        padding:20px;
+    }
+
+    .auth-container{
+        min-height:auto;
+    }
+
+    .right-panel{
+        padding:40px 28px;
+    }
+
+    .form-heading{
+        font-size:2.3rem;
+    }
+
+    .date-range{
+        grid-template-columns:1fr;
+    }
+}
+
+@media (max-width: 480px){
+    .left-panel{
+        padding:20px;
+    }
+
+    .right-panel{
+        padding:28px 20px;
+    }
+
+    .form-heading{
+        font-size:2rem;
+    }
+
+    form{
+        gap:20px;
+    }
 }
