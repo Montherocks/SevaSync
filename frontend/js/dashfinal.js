@@ -9,9 +9,9 @@ const addDays = (n) => {
 let upcomingTasks = [];
 let completedTasks = [];
 let kpiData = {
-  volunteerHours: 3,
-  tasksPending: 2,
-  tasksCompleted: 3
+  volunteerHours: 0,
+  tasksPending: 0,
+  tasksCompleted: 0
 };
 
 /* ---------- Count-up KPI animation ---------- */
@@ -160,17 +160,25 @@ document.getElementById('searchInput').addEventListener('input', e => renderTabl
 function setKPIData(data){
   kpiData = data;
 
-  // Main values
-  document.getElementById("volunteerHours").textContent = data.volunteerHours || 2;
-  document.getElementById("tasksPending").textContent = data.tasksPending || 3;
-  document.getElementById("tasksCompleted").textContent = data.tasksCompleted || 0;
+  // HARD-CODED DASHBOARD VALUES (FOR NOW)
+  const hours = 2;
+  const pending = 3;
+  const active = 2;
+  const completed = 0;
 
-  // Trends (IMPORTANT)
-  document.getElementById("trendVolunteer").textContent = data.trendVolunteer || "";
-  document.getElementById("trendPending").textContent = data.trendPending || "";
-  document.getElementById("trendCompleted").textContent = data.trendCompleted || "";
+  document.getElementById("volunteerHours").textContent = hours;
+  document.getElementById("tasksPending").textContent = pending;
+  document.getElementById("tasksCompleted").textContent = completed;
+
+  // ⚠️ IMPORTANT: YOU DID NOT HAVE THIS ELEMENT BEFORE
+  const activeEl = document.getElementById("tasksActive");
+  if (activeEl) activeEl.textContent = active;
+
+  // Trends (optional)
+  document.getElementById("trendVolunteer").textContent = "Fixed demo data";
+  document.getElementById("trendPending").textContent = "3 pending tasks";
+  document.getElementById("trendCompleted").textContent = "0 completed";
 }
-
 // ----------- SET UPCOMING TASKS -----------
 function setUpcomingTasks(tasks){
   upcomingTasks = tasks.map(t => ({
@@ -194,6 +202,23 @@ renderCalendar();
 renderUpcoming();
 renderTable();
 loadVolunteerProfile();
+loadDashboard();
+
+async function loadDashboard() {
+
+    // ❌ STOP backend call completely for now
+    console.log("Using HARD-CODED DASHBOARD DATA");
+
+    setKPIData({
+        volunteerHours: 2,
+        tasksPending: 3,
+        tasksActive: 2,
+        tasksCompleted: 0
+    });
+
+    setUpcomingTasks([]);
+    setCompletedTasks([]);
+}
 
 async function loadVolunteerProfile() {
   const token = localStorage.getItem("jwtToken");
