@@ -50,12 +50,10 @@ public class AiEligibilityService {
                 volunteer.getAvailabilityStart(),
                 volunteer.getAvailabilityEnd()
         );
-
         String response = chatClient.prompt()
                 .user(prompt)
                 .call()
                 .content();
-
         return parseResponse(response);
     }
 
