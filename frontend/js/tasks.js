@@ -75,13 +75,13 @@ async function registerTask(eventId, button) {
     button.disabled = true;
 
     const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("jwtToken");
 
     const BASE_URL = "http://localhost:8080";
 
     try {
         const response = await fetch(
-            `${BASE_URL}/register?userId=${userId}&eventId=${eventId}`,
+            `${BASE_URL}/register/${eventId}`,
             {
                 method: "POST",
                 headers: {
