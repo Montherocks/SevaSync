@@ -133,4 +133,45 @@ public class EventRegistrationService {
 
         return "Registration Rejected";
     }
+
+    private RegistrationAdminDTO mapToDTO(Registration reg) {
+
+        Users user = userRepository.findById(reg.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Event event = eventRepository.findById(reg.getEventId())
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        return new RegistrationAdminDTO(
+                reg.getId(),
+                event.getId(),
+                event.getName(),
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                reg.getStatus()
+        );
+    }
+
+    public List<RegistrationAdminDTO> getPendingTasks() {
+        return regRepo.findByStatus(RegistrationStatus.PENDING)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    public List<RegistrationAdminDTO> getActiveTasks() {
+        return regRepo.findActiveTasks()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    public List<RegistrationAdminDTO> getCompletedTasks() {
+        return regRepo.findCompletedTasks()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
 }
