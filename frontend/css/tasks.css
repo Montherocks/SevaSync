@@ -209,3 +209,29 @@ body{
 .ai-btn:hover {
     background: #5a4bd6;
 }
+
+.task-status {
+    margin-bottom: 8px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* Different states */
+.status-badge.pending {
+    background: #f39c12;
+}
+
+.status-badge.approved {
+    background: #2ecc71;
+}
+
+.status-badge.rejected {
+    background: #e74c3c;
+}
