@@ -22,11 +22,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         const registrations = regResponse.ok ? await regResponse.json() : [];
         const events = await eventResponse.json();
 
+
+        console.log(events);
+
         console.log("Registrations:", registrations);
 
-        const registeredEventIds = new Set(
-            registrations.map(r => r.eventId)
-        );
+        const registrationMap = new Map();
+
+        registrations.forEach(r => {
+            registrationMap.set(r.eventId, r);
+        });
 
         tasksGrid.innerHTML = "";
 
@@ -40,7 +45,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             else if (event.category === "Food Distribution") imagePath = "images/fooddistribution.jpg";
             else if (event.category === "Clothes Distribution") imagePath = "images/clothesdistribution.jpg";
 
-            const isRegistered = registeredEventIds.has(event.id);
+            const registration = registrationMap.get(event.id);
+            const status = registration ? registration.status : null;
 
             const card = document.createElement("div");
             card.classList.add("task-card");
@@ -69,12 +75,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                         <span>${event.location}</span>
                     </div>
 
-                    <button 
-                        onclick="registerTask(${event.id}, this)"
-                        ${isRegistered ? "disabled" : ""}
-                    >
-                        ${isRegistered ? "Registered ✔" : "Register"}
-                    </button>
+                    <div class="task-status">
+    ${
+        status 
+        ? `<span class="status-badge ${status.toLowerCase()}">${status}</span>` 
+        : ""
+    }
+</div>
+
+<button 
+    onclick="registerTask(${event.id}, this)"
+    ${status ? "disabled" : ""}
+>
+    ${status ? "Registered ✔" : "Register"}
+</button>
 
                     <button 
                         class="ai-btn"
